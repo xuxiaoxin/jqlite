@@ -1,0 +1,10 @@
+#summary A list of devices which jQLite works on
+
+= Mobile Devices that jQLite Works On =
+
+The following devices have been tested with jQLite:
+
+  * iPhone, iPod Touch
+  * Android
+  * !BlackBerry 8330, 8530, 9700, etc. (with OS v4.6+)
+  * webOS (PalmPre, Palm pixi)
