@@ -1,0 +1,52 @@
+#summary Supported functionality in jQLite
+
+= Quick Summary of Supported Features =
+
+jQLite establishes itself as "jQuery" and also exposes the "$" object.  You cannot use jQuery and jQLite together on a page.
+
+== Supported Selectors ==
+
+The following are the types of selectors currently implemented.  The selectors are implemented using straightforward JavaScript since regular expressions across browsers aren't consistent:
+
+  * Id selectors: #foo
+  * Element selectors: div, span, etc...
+  * Class selectors: .bar, .baz
+  * Multiple class selectors: “div.button.jq”
+  * Descendant selectors: “div.jq span.hotlink”
+
+== Supported Methods ==
+
+A small subset of the operations which jQuery supports are currently implemented.  All of them are implemented using the chained operation syntax of jQuery. e.g:
+{{{
+   $("div.foo").each(function() {
+      $(this).removeClass("foo").addClass("bar");
+   });
+}}}
+
+Supported methods:
+
+  * .each(function...)
+  * .addClass(name)
+  * .removeClass(name)
+  * .toggleClass(name)
+  * .css(name) _getter_
+  * .css(name, value) _setter_
+  * .css(obj) _multi-property setter_
+  * .show(callbackFunction...)
+  * .hide(callbackFunction...)
+  * .hasClass(name)
+  * .bind(eventName, function...)
+  * .trigger(eventName, [data array])
+  * .click(function...)
+  * .load(url, params, function...)
+
+== Document Ready Functionality ==
+
+In addition to the methods above, you can use the document-ready functionality as either:
+
+  * jQuery(document).ready(function...)
+  * jQuery(function...)
+
+== Events ==
+
+The event engine is implemented to be as simple as possible.  It isn't a direct match for the jQuery event engine.  Binding of browser events (click, mouseover, mouseout, etc.) is done through `addEventListener()`, but custom events are supported as well.  The difference is that for browser events, the `Event` object is the only argument passed to the event handler.  Any data associated with a `.trigger()` is passed as a "data" field on the `Event` object.  For custom events, the "data" is passed as an array to the handler.
