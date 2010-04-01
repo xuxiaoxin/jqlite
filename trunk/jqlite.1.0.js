@@ -312,7 +312,7 @@
    };
 
    /**
-    * jQuery "lite" - Fry In-house solution
+    * jQuery "lite"
     *
     * This is a small subset of support for jQuery-like functionality.  It
     * is not intended to be a full replacement, but it will provide some
