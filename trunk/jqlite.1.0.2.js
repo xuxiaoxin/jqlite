@@ -1,5 +1,5 @@
 /*!
- * jQLite JavaScript Library v1.0.1
+ * jQLite JavaScript Library v1.0.2
  * Copyright (c) 2010 Brett Fattori (bfattori@gmail.com)
  * Licensed under the MIT license
  * http://www.opensource.org/licenses/mit-license.php
@@ -299,16 +299,19 @@
       }
 
       var eventClass = EVENT_TYPES[eventType];
+      if (eventType.indexOf("on") == 0) {
+         eventType = eventType.substring(2);
+      }
       if (eventClass) {
          // Let the browser handle it
-         this.addEventListener(eventType, fn, false);
+         node.addEventListener(eventType, fn, false);
       } else {
-         if (!this._handlers) {
-            this._handlers = {};
+         if (!node._handlers) {
+            node._handlers = {};
          }
-         var handlers = this._handlers[eventType] || [];
+         var handlers = node._handlers[eventType] || [];
          handlers.push(fn);
-         this._handlers[eventType] = handlers;
+         node._handlers[eventType] = handlers;
       }
    };
 
@@ -506,7 +509,25 @@
          } else {
             // synchronous support?
          }
+      },
+
+      complete: function(xhr, callback) {
+         jQL.ajax.status = xhr.status;
+         jQL.ajax.responseText = xhr.responseText;
+         jQL.ajax.responseXML = xhr.responseXML;
+         if (jQL.isFunction(callback)) {
+            callback(xhr.responseText, xhr.status);
+         }
+      },
+
+      error: function(xhr, callback) {
+         jQL.ajax.status = xhr.status;
+         jQL.ajax.statusText = xhr.statusText;
+         if (jQL.isFunction(callback)) {
+            callback(xhr.status, xhr.statusText);
+         }
       }
+
    };
 
    /**
@@ -540,7 +561,7 @@
       selector: "",
       context: null,
       length: 0,
-      jquery: "jqlite-1.0.1",
+      jquery: "jqlite-1.0.2",
 
       init: function(s, e) {
 
@@ -742,7 +763,7 @@
       click: function(fn) {
          return this.each(function() {
             if (jQL.isFunction(fn)) {
-               setHandler(this, "click", fn);
+               setHandler(this, "onclick", fn);
             } else {
                return fireEvent(this, "onclick");
             }
@@ -752,7 +773,7 @@
       mouseover: function(fn) {
          return this.each(function() {
             if (jQL.isFunction(fn)) {
-               setHandler(this, "mouseover", fn);
+               setHandler(this, "onmouseover", fn);
             } else {
                return fireEvent(this, "onmouseover");
             }
@@ -762,7 +783,7 @@
       mouseout: function(fn) {
          return this.each(function() {
             if (jQL.isFunction(fn)) {
-               setHandler(this, "mouseout", fn);
+               setHandler(this, "onmouseout", fn);
             } else {
                return fireEvent(this, "onmouseout");
             }
@@ -772,7 +793,7 @@
       mousedown: function(fn) {
          return this.each(function() {
             if (jQL.isFunction(fn)) {
-               setHandler(this, "mousedown", fn);
+               setHandler(this, "onmousedown", fn);
             } else {
                return fireEvent(this, "onmousedown");
             }
@@ -782,7 +803,7 @@
       mouseup: function(fn) {
          return this.each(function() {
             if (jQL.isFunction(fn)) {
-               setHandler(this, "mouseover", fn);
+               setHandler(this, "onmouseup", fn);
             } else {
                return fireEvent(this, "onmouseup");
             }
@@ -792,7 +813,7 @@
       focus: function(fn) {
          return this.each(function() {
             if (jQL.isFunction(fn)) {
-               setHandler(this, "focus", fn);
+               setHandler(this, "onfocus", fn);
             } else {
                return fireEvent(this, "onfocus");
             }
@@ -802,7 +823,7 @@
       blur: function(fn) {
          return this.each(function() {
             if (jQL.isFunction(fn)) {
-               setHandler(this, "blur", fn);
+               setHandler(this, "onblur", fn);
             } else {
                return fireEvent(this, "onblur");
             }
@@ -812,7 +833,7 @@
       change: function(fn) {
          return this.each(function() {
             if (jQL.isFunction(fn)) {
-               setHandler(this, "change", fn);
+               setHandler(this, "onchange", fn);
             } else {
                return fireEvent(this, "onchange");
             }
@@ -822,7 +843,7 @@
       submit: function(fn) {
          return this.each(function() {
             if (jQL.isFunction(fn)) {
-               setHandler(this, "submit", fn);
+               setHandler(this, "onsubmit", fn);
             } else {
                return fireEvent(this, "onsubmit");
             }
