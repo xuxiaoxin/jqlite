@@ -35,9 +35,24 @@ Supported methods:
   * .show(callbackFunction...)
   * .hide(callbackFunction...)
   * .hasClass(name)
+  * .html(htmltext)
   * .bind(eventName, function...)
   * .trigger(eventName, [data array])
+
+Event Handlers:
+
   * .click(function...)
+  * .mouseover(function...)
+  * .mouseout(function...)
+  * .mouseup(function...)
+  * .mousedown(function...)
+  * .change(function...)
+  * .focus(function...)
+  * .blur(function...)
+  * .submit(function...)
+
+AHAH:
+
   * .load(url, params, function...)
 
 == Document Ready Functionality ==
