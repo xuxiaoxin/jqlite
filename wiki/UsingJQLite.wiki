@@ -6,7 +6,7 @@ jQLite establishes itself as "jQuery" and also exposes the "$" object.  You cann
 
 == Supported Selectors ==
 
-The following are the types of selectors currently implemented.  The selectors are implemented using straightforward JavaScript since regular expressions across browsers aren't consistent:
+The following are the types of selectors currently implemented.  The selectors are implemented using straightforward !JavaScript since regular expressions across browsers aren't consistent:
 
   * Id selectors: #foo
   * Element selectors: div, span, etc...
