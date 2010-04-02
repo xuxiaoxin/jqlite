@@ -1,5 +1,5 @@
 /*!
- * jQLite JavaScript Library v1.0
+ * jQLite JavaScript Library v1.0.1
  * Copyright (c) 2010 Brett Fattori (bfattori@gmail.com)
  * Licensed under the MIT license
  * http://www.opensource.org/licenses/mit-license.php
@@ -235,6 +235,8 @@
       return tempName.replace(/ /g, "");
    };
 
+   //------------------ EVENTS
+
    /**
     * Associative array of events and their types (Mozilla/Firefox only)
     * @private
@@ -308,11 +310,10 @@
          handlers.push(fn);
          this._handlers[eventType] = handlers;
       }
-
    };
 
    /**
-    * jQuery "lite"
+    * jQuery "lite" - Fry In-house solution
     *
     * This is a small subset of support for jQuery-like functionality.  It
     * is not intended to be a full replacement, but it will provide some
@@ -402,9 +403,11 @@
 
    jQL.toPList = function(params) {
       var pList = "";
-      jQL.each(params, function(val, name) {
-         pList += (pList.length != 0 ? "&" : "") + name + "=" + encodeURIComponent(val);
-      });
+      if (params) {
+         jQL.each(params, function(val, name) {
+            pList += (pList.length != 0 ? "&" : "") + name + "=" + encodeURIComponent(val);
+         });
+      }
       return pList;
    };
 
@@ -502,24 +505,6 @@
             setTimeout(poll, 250);
          } else {
             // synchronous support?
-
-         }
-      },
-
-      complete: function(xhr, callback) {
-         jQL.ajax.status = xhr.status;
-         jQL.ajax.responseText = xhr.responseText;
-         jQL.ajax.responseXML = xhr.responseXML;
-         if (jQL.isFunction(callback)) {
-            callback(xhr.responseText, xhr.status);
-         }
-      },
-
-      error: function(xhr, callback) {
-         jQL.ajax.status = xhr.status;
-         jQL.ajax.statusText = xhr.statusText;
-         if (jQL.isFunction(callback)) {
-            callback(xhr.status, xhr.statusText);
          }
       }
    };
@@ -555,7 +540,7 @@
       selector: "",
       context: null,
       length: 0,
-      jquery: "jqlite-1.0",
+      jquery: "jqlite-1.0.1",
 
       init: function(s, e) {
 
@@ -757,9 +742,89 @@
       click: function(fn) {
          return this.each(function() {
             if (jQL.isFunction(fn)) {
-               this.addEventListener("click", fn, false);
+               setHandler(this, "click", fn);
             } else {
                return fireEvent(this, "onclick");
+            }
+         });
+      },
+
+      mouseover: function(fn) {
+         return this.each(function() {
+            if (jQL.isFunction(fn)) {
+               setHandler(this, "mouseover", fn);
+            } else {
+               return fireEvent(this, "onmouseover");
+            }
+         });
+      },
+
+      mouseout: function(fn) {
+         return this.each(function() {
+            if (jQL.isFunction(fn)) {
+               setHandler(this, "mouseout", fn);
+            } else {
+               return fireEvent(this, "onmouseout");
+            }
+         });
+      },
+
+      mousedown: function(fn) {
+         return this.each(function() {
+            if (jQL.isFunction(fn)) {
+               setHandler(this, "mousedown", fn);
+            } else {
+               return fireEvent(this, "onmousedown");
+            }
+         });
+      },
+
+      mouseup: function(fn) {
+         return this.each(function() {
+            if (jQL.isFunction(fn)) {
+               setHandler(this, "mouseover", fn);
+            } else {
+               return fireEvent(this, "onmouseup");
+            }
+         });
+      },
+
+      focus: function(fn) {
+         return this.each(function() {
+            if (jQL.isFunction(fn)) {
+               setHandler(this, "focus", fn);
+            } else {
+               return fireEvent(this, "onfocus");
+            }
+         });
+      },
+
+      blur: function(fn) {
+         return this.each(function() {
+            if (jQL.isFunction(fn)) {
+               setHandler(this, "blur", fn);
+            } else {
+               return fireEvent(this, "onblur");
+            }
+         });
+      },
+
+      change: function(fn) {
+         return this.each(function() {
+            if (jQL.isFunction(fn)) {
+               setHandler(this, "change", fn);
+            } else {
+               return fireEvent(this, "onchange");
+            }
+         });
+      },
+
+      submit: function(fn) {
+         return this.each(function() {
+            if (jQL.isFunction(fn)) {
+               setHandler(this, "submit", fn);
+            } else {
+               return fireEvent(this, "onsubmit");
             }
          });
       }
@@ -808,18 +873,6 @@
 
          // A fallback to window.onload, that will always work
          window.attachEvent( "onload", jQL.ready );
-
-         // If IE and not a frame
-         // continually check to see if the document is ready
-         //var toplevel = false;
-
-         //try {
-         // toplevel = window.frameElement == null;
-         //} catch(e) {}
-
-         //if ( document.documentElement.doScroll && toplevel ) {
-         // doScrollCheck();
-         //}
       }
    }
 
