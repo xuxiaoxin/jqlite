@@ -1,5 +1,5 @@
 /*!
- * jQLite JavaScript Library v1.0.2
+ * jQLite JavaScript Library v1.0.3
  * Copyright (c) 2010 Brett Fattori (bfattori@gmail.com)
  * Licensed under the MIT license
  * http://www.opensource.org/licenses/mit-license.php
@@ -77,7 +77,7 @@
 
    var parseSelector = function(selector, context) {
 
-      context = context || document.body;
+      context = context || document;
 
       if (selector.nodeType && selector.nodeType === DOM_DOCUMENT_NODE) {
          selector = document.body;
@@ -98,7 +98,8 @@
       }
 
       if (context) {
-         if (context.nodeType && context.nodeType == DOM_ELEMENT_NODE) {
+         if (context.nodeType && (context.nodeType === DOM_ELEMENT_NODE ||
+                 context.nodeType === DOM_DOCUMENT_NODE)) {
             context = [context];
          } else if (typeof context === "string") {
             context = jQL(context).toArray();
@@ -154,6 +155,7 @@
 
       if (!root) {
          setTimeout(arguments.callee, 33);
+         return;
       }
 
       var script = document.createElement("script"),
@@ -293,7 +295,7 @@
       if (!jQL.isFunction(fn)) {
          return;
       }
-      
+
       if (typeof eventType === "string") {
          eventType = eventType.toLowerCase();
       }
@@ -561,7 +563,7 @@
       selector: "",
       context: null,
       length: 0,
-      jquery: "jqlite-1.0.2",
+      jquery: "jqlite-1.0.3",
 
       init: function(s, e) {
 
@@ -587,7 +589,7 @@
       },
 
       // CORE
-      
+
       each: function(fn) {
          return jQL.each(this, fn);
       },
@@ -610,7 +612,7 @@
       },
 
       // CSS
-      
+
       addClass: function(cName) {
          return this.each(function() {
             if (this.className.length != 0) {
