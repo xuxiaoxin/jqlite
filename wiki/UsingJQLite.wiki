@@ -38,8 +38,17 @@ Supported methods:
   * .hide(callbackFunction...)
   * .hasClass(name)
   * .html(htmltext)
+  * .append(obj)
+  * .remove()
+  * .remove(filter)
+  * .empty()
+  * .val() _getter_
+  * .val(value) _setter_
+  * .attr(name) _getter_
+  * .attr(name, value) _setter_
+  * .attr(obj) _multi-attribute setter_
   * .bind(eventName, function...)
-  * .trigger(eventName, [data array])
+  * .trigger(eventName, (array))
 
 Event Handlers:
 
@@ -57,12 +66,27 @@ AHAH:
 
   * .load(url, params, function...)
 
+== Element Creation ==
+
+You can create elements on the fly by calling jQuery with some HTML as the argument:
+
+{{{
+   var div = $("<div class='foo'>");
+   div.addClass("bar");
+}}}
+
 == Document Ready Functionality ==
 
 In addition to the methods above, you can use the document-ready functionality as either:
 
   * jQuery(document).ready(function...)
   * jQuery(function...)
+
+{{{
+   $(document).ready(function() {
+      alert("The document is now ready!");
+   });
+}}}
 
 == Events ==
 
