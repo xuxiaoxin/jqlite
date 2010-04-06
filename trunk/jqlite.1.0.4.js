@@ -1,5 +1,5 @@
 /*!
- * jQLite JavaScript Library v1.0.3
+ * jQLite JavaScript Library v1.0.4
  * Copyright (c) 2010 Brett Fattori (bfattori@gmail.com)
  * Licensed under the MIT license
  * http://www.opensource.org/licenses/mit-license.php
@@ -98,14 +98,7 @@
       }
 
       if (context) {
-         if (context.nodeType && (context.nodeType === DOM_ELEMENT_NODE ||
-                 context.nodeType === DOM_DOCUMENT_NODE)) {
-            context = [context];
-         } else if (typeof context === "string") {
-            context = jQL(context).toArray();
-         } else if (context.jquery && typeof context.jquery === "string") {
-            context = context.toArray();
-         }
+         context = cleanUp(context);
       }
 
       if (jQL.isArray(selector)) {
@@ -563,7 +556,7 @@
       selector: "",
       context: null,
       length: 0,
-      jquery: "jqlite-1.0.3",
+      jquery: "jqlite-1.0.4",
 
       init: function(s, e) {
 
@@ -576,12 +569,29 @@
             this.length = 1;
          }
 
-         if (typeof s == "function") {
+         if (typeof s === "function") {
             // Short-form document.ready()
             this.ready(s);
          } else {
+            var els;
+            if (s.jquery && typeof s.jquery === "string") {
+               // Already jQLite, just grab its elements
+               els = s.toArray();
+            } else if (jQL.isArray(s)) {
+               // An array of elements
+               els = s;
+            } else if (typeof s === "string" && trim(s).indexOf("<") == 0 && trim(s).indexOf(">") != -1) {
+               // This is most likely html, so create an element for them
+               var elm = trim(s).indexOf("<option") == 0 ? "SELECT" : "DIV";
+               var h = document.createElement(elm);
+               h.innerHTML = s;
+               // Extract the element
+               els = [h.firstChild];
+               h = null;
+            } else {
+               els = parseSelector(s, e);
+            }
 
-            var els = parseSelector(s, e);
             push.apply(this, els);
 
          }
@@ -748,6 +758,67 @@
          });
       },
 
+      attr: function(name, value) {
+         if (typeof name === "string" && value == null) {
+            return this[0].getAttribute(name);
+         } else {
+            return this.each(function() {
+               if (typeof name === "string") {
+                  var o = {};
+                  o[name] = value;
+                  name = o;
+               }
+
+               for (var i in name) {
+                  var v = name[i];
+                  this.setAttribute(i,v);
+               }
+            });
+         }
+      },
+
+      append: function(child) {
+         child = cleanUp(child);
+         return this.each(function() {
+            for (var i = 0; i < child.length; i++) {
+               this.appendChild(child[i]);
+            }
+         });
+      },
+
+      remove: function(els) {
+         return this.each(function() {
+            if (els) {
+               $(els, this).remove();
+            } else {
+               var par = this.parentNode;
+               par.removeChild(this);
+            }
+         });
+      },
+
+      empty: function() {
+         return this.each(function() {
+            this.innerHTML = "";
+         });
+      },
+
+      val: function(value) {
+         if (value == null) {
+            var v = null;
+            if (typeof this[0].value != "undefined") {
+               v = this[0].value;
+            }
+            return v;
+         } else {
+            return this.each(function() {
+               if (typeof this.value != "undefined") {
+                  this.value = value;
+               }
+            });
+         }
+      },
+
       // EVENTS
 
       bind: function(eType, fn) {
@@ -906,6 +977,26 @@
          }
       }
       return -1;
+   };
+
+   var trim = function(str) {
+      if (str != null) {
+         return str.toString().replace(/^\s*|\s*$/g,"");
+      } else {
+         return "";
+      }
+   };
+
+   var cleanUp = function(els) {
+      if (els.nodeType && (els.nodeType === DOM_ELEMENT_NODE ||
+                 els.nodeType === DOM_DOCUMENT_NODE)) {
+         els = [els];
+      } else if (typeof els === "string") {
+         els = jQL(els).toArray();
+      } else if (els.jquery && typeof els.jquery === "string") {
+         els = els.toArray();
+      }
+      return els;
    };
 
    // -=- This happens last, as long as jQuery isn't already defined
