@@ -2,7 +2,7 @@
 
 = Quick Summary of Supported Features =
 
-jQLite establishes itself as "jQuery" and also exposes the "$" object.  You cannot use jQuery and jQLite together on a page.
+jQLite establishes itself as "jQuery" and also exposes the "$" constructor.  You cannot use jQuery and jQLite together on a page.
 
 == Supported Selectors ==
 
