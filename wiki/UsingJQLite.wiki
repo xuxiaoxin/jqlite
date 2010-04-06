@@ -4,7 +4,7 @@
 
 jQLite establishes itself as "jQuery" and also exposes the "$" constructor.  You cannot use jQuery and jQLite together on a page.  Since this is intended to be a stand-in for jQuery, it isn't going to support all of the features of jQuery.  This is intended to be a close match to simple functionality needed on a mobile device.  The main focus was element selection, CSS manipulation, AJAX/AHAH, and some event handling.  Things like animation don't make as much sense due to the limited power of some mobile devices.
 
-If you develop your web app to use jQuery in its most simplest way, you should be able to upgrade to jQuery when mobile devices can handle it fully.  As it stands, the only mobile browser which this was intended for (BlackBerry) will soon be updated to a !WebKit implementation.
+If you develop your web app to use jQuery in its most simplest way, you should be able to upgrade to jQuery when mobile devices can handle it fully.  As it stands, the only mobile browser which this was intended for (!BlackBerry) will soon be updated to a !WebKit implementation.
 
 == Supported Selectors ==
 
