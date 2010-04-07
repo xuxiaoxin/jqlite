@@ -1,5 +1,5 @@
 /*!
- * jQLite JavaScript Library v1.0.4
+ * jQLite JavaScript Library v1.0.5
  * Copyright (c) 2010 Brett Fattori (bfattori@gmail.com)
  * Licensed under the MIT license
  * http://www.opensource.org/licenses/mit-license.php
@@ -326,6 +326,7 @@
       return new jQLp().init(s, e);
    },
    document = window.document,
+   hasOwnProperty = Object.prototype.hasOwnProperty,
    toString = Object.prototype.toString,
    push = Array.prototype.push,
    slice = Array.prototype.slice,
@@ -374,6 +375,27 @@
     */
    jQL.isArray = function( obj ) {
       return toString.call(obj) === "[object Array]";
+   };
+
+   /**
+    * Test if the given object is an Object
+    * @param obj
+    */
+   jQL.isPlainObject = function( obj ) {
+      // Make sure that DOM nodes and window objects don't pass through, as well
+      if ( !obj || toString.call(obj) !== "[object Object]" || obj.nodeType || obj.setInterval ) {
+         return false;
+      }
+
+      // Not own constructor property must be Object
+      if ( obj.constructor && !hasOwnProperty.call(obj, "constructor")
+         && !hasOwnProperty.call(obj.constructor.prototype, "isPrototypeOf") ) {
+         return false;
+      }
+
+      // Own properties are enumerated firstly     var key;
+      for ( key in obj ) {}
+      return key === undefined || hasOwnProperty.call( obj, key );
    };
 
    /**
@@ -556,7 +578,7 @@
       selector: "",
       context: null,
       length: 0,
-      jquery: "jqlite-1.0.4",
+      jquery: "jqlite-1.0.5",
 
       init: function(s, e) {
 
@@ -565,11 +587,10 @@
          }
 
          if (s.nodeType) {
+            // A simple node
             this.context = this[0] = s;
             this.length = 1;
-         }
-
-         if (typeof s === "function") {
+         } else if (typeof s === "function") {
             // Short-form document.ready()
             this.ready(s);
          } else {
@@ -681,8 +702,10 @@
 
       hide: function(fn) {
          return this.each(function() {
-            this._oldDisplay = this.style["display"];
-            this.style["display"] = "none";
+            if (this.style["display"].toString() != "none") {
+               this._oldDisplay = this.style["display"].toString() || (this.nodeName != "span" ? "block" : "inline");
+               this.style["display"] = "none";
+            }
             if (jQL.isFunction(fn)) {
                fn(this);
             }
@@ -691,7 +714,7 @@
 
       show: function(fn) {
          return this.each(function() {
-            this.style["display"] = (this._oldDisplay || (this.nodeName == "div" ? "block" : "inline"));
+            this.style["display"] = ((this._oldDisplay && this._oldDisplay != "" ? this._oldDisplay : null) || (this.nodeName != "span" ? "block" : "inline"));
             if (jQL.isFunction(fn)) {
                fn(this);
             }
@@ -775,6 +798,10 @@
                }
             });
          }
+      },
+
+      parent: function() {
+         return jQL(this[0].parentNode);
       },
 
       append: function(child) {
@@ -1003,6 +1030,66 @@
    if (typeof window.jQuery == "undefined") {
       // Export
       window.jQuery = jQL;
+      window.jQuery.fn = jQLp.prototype;
       window.$ = window.jQuery;
    }
+
+   // Allow extending jQL or jQLp
+   jQuery.extend = jQuery.fn.extend = function() {
+      // copy reference to target object
+      var target = arguments[0] || {}, i = 1, length = arguments.length, deep = false, options, name, src, copy;
+
+      // Handle a deep copy situation
+      if ( typeof target === "boolean" ) {
+         deep = target;
+         target = arguments[1] || {};
+         // skip the boolean and the target
+         i = 2;
+      }
+
+      // Handle case when target is a string or something (possible in deep copy)
+      if ( typeof target !== "object" && !jQuery.isFunction(target) ) {
+         target = {};
+      }
+
+      // extend jQL itself if only one argument is passed
+      if ( length === i ) {
+         target = this;
+         --i;
+      }
+
+      for ( ; i < length; i++ ) {
+         // Only deal with non-null/undefined values
+         if ( (options = arguments[ i ]) != null ) {
+            // Extend the base object
+            for ( name in options ) {
+               src = target[ name ];
+               copy = options[ name ];
+
+               // Prevent never-ending loop
+               if ( target === copy ) {
+                  continue;
+               }
+
+               // Recurse if we're merging object literal values or arrays
+               if ( deep && copy && ( jQuery.isPlainObject(copy) || jQuery.isArray(copy) ) ) {
+                  var clone = src && ( jQuery.isPlainObject(src) || jQuery.isArray(src) ) ? src
+                     : jQuery.isArray(copy) ? [] : {};
+
+                  // Never move original objects, clone them
+                  target[ name ] = jQuery.extend( deep, clone, copy );
+
+               // Don't bring in undefined values
+               } else if ( copy !== undefined ) {
+                  target[ name ] = copy;
+               }
+            }
+         }
+      }
+
+      // Return the modified object
+      return target;
+   };
+
 })();
+
