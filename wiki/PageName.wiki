@@ -2,4 +2,37 @@
 
 = A List of Extensions to jQLite =
 
-  * Accordian - A group of tabs which expand/collapse, either like a radio group, or individually.
+The following extensions work with jQLite and jQuery.
+
+== Accordian ==
+
+A group of tabs which expand/collapse, either like a radio group, or individually.  You can convert any `UL` element into an accordion by specifying a format like the following:
+
+{{{
+   <ul class="tabs">
+      <li>
+         <div class="title">Tab One</div>
+         <div class="body">
+            This is the body of tab one.
+         </div>
+      </li>
+      <li>
+         <div class="title">Tab Two</div>
+         <div class="body">
+            This is the body of tab two.
+         </div>
+      </li>
+      <li>
+         <div class="title">Tab Three</div>
+         <div class="body">
+            This is the body of tab three.
+         </div>
+      </li>
+   </ul> 
+
+   <script type="text/javascript">
+      $(document).ready(function() {
+         $("ul.tabs").jqAccordian({ openOne: false });
+      });
+   </script>
+}}}
