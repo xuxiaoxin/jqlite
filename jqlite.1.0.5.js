@@ -1,5 +1,6 @@
 /*!
- * jQLite JavaScript Library v1.0.5
+ * jQLite JavaScript Library v1.0.5 (http://code.google.com/p/jqlite/)
+ *
  * Copyright (c) 2010 Brett Fattori (bfattori@gmail.com)
  * Licensed under the MIT license
  * http://www.opensource.org/licenses/mit-license.php
