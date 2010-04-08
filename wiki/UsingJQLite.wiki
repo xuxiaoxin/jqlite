@@ -38,6 +38,7 @@ Supported methods:
   * .hide(callbackFunction...)
   * .hasClass(name)
   * .html(htmltext)
+  * .parent()
   * .append(obj)
   * .remove()
   * .remove(filter)
@@ -49,6 +50,7 @@ Supported methods:
   * .attr(obj) _multi-attribute setter_
   * .bind(eventName, function...)
   * .trigger(eventName, (array))
+  * .extend(obj)
 
 Event Handlers:
 
@@ -91,3 +93,9 @@ In addition to the methods above, you can use the document-ready functionality a
 == Events ==
 
 The event engine is implemented to be as simple as possible.  It isn't a direct match for the jQuery event engine.  Binding of browser events (click, mouseover, mouseout, etc.) is done through `addEventListener()`, but custom events are supported as well.  The difference is that for browser events, the `Event` object is the only argument passed to the event handler.  Any data associated with a `.trigger()` is passed as a "data" field on the `Event` object.  For custom events, the "data" is passed as an array to the handler.
+
+== Extending jQLite ==
+
+jQLite now supports extensions.  Just like jQuery, you can extend a plain !JavaScript object, `jQuery`, or `jQuery.fn`.  This allows you to create extensions to jQLite.  The extensions can still only use the methods available above, but you should be able to implement simple extensions.
+
+There's an example extension on the [http://code.google.com/p/jqlite/w/list Wiki] for an Accordian group.
