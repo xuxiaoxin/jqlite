@@ -12,3 +12,4 @@ The following devices have been tested with jQLite:
 == Devices Tested - Not Functional ==
 
   * IEMobile 6
+  * IEMobile 6.5
