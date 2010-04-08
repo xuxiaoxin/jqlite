@@ -1,4 +1,5 @@
 #summary Supported functionality in jQLite
+#labels Featured
 
 = Quick Summary of Supported Features =
 
