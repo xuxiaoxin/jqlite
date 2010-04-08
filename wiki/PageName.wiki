@@ -1,0 +1,5 @@
+#summary Extensions to jQLite
+
+= A List of Extensions to jQLite =
+
+  * Accordian - A group of tabs which expand/collapse, either like a radio group, or individually.
