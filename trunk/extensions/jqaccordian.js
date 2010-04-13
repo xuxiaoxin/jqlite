@@ -33,7 +33,7 @@
 
          return this.each(function() {
             var jQ = $(this);
-            if (jQ.hasClass("jQ-accordian")) {
+            if (jQ.hasClass("jq-accordian")) {
                // If it's already an accordian, just exit
                return;
             }
