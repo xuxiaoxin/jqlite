@@ -15,11 +15,6 @@
  *          bodies.  If false, clicking the title will toggle the body open
  *          and closed.
  *
- * @author Brett Fattori (bfattori@gmail.com)
- * @author $Author$
- * @version $Revision$
- * 
- * Modified: $Date$
  */
 
 
@@ -54,25 +49,47 @@
             // Wire up the elements with the "title" class
             // to open/close the tab's body
             $(".title", jQ).each(function() {
-               var t = $(this);
-               t.click(function() {
-                  var tjQ = $(this);
-                  if (o.openOne) {
-                     // Find all of the bodies and close them
-                     $(".body", jQ).hide();
-                     // Show our own body
-                     $(".body", tjQ.parent()).show();
-                  } else {
-                     var tp = tjQ.parent();
-                     if (tp.hasClass("jq-accordian-open")) {
-                        tp.removeClass("jq-accordian-open");
-                        $(".body", tp).hide();
+               var t = $(this);  // title
+               if (t.parent().parent()[0] == jQ[0]) {
+                  t.click(function() {
+                     var tjQ = $(this);   // title
+                     if (o.openOne) {
+                        // Find all of the bodies and close them
+                        $(".body", jQ).each(function() {
+                           var b = $(this);  // body
+                           if (b.parent().parent()[0] == jQ[0]) {
+                              b.hide();
+                           }
+                        });
+                        // Show our own body
+                        $(".body", tjQ.parent()).each(function() {
+                           var b = $(this);  // body
+                           if (b.parent().parent()[0] == tjQ.parent()[0]) {
+                              b.show();
+                           }
+                        });
                      } else {
-                        tp.addClass("jq-accordian-open");
-                        $(".body", tp).show();
+                        var tp = tjQ.parent();  // li
+                        if (tp.hasClass("jq-accordian-open")) {
+                           tp.removeClass("jq-accordian-open");
+                           $(".body", tp).each(function() {
+                              var b = $(this);  // body
+                              if (b.parent().parent()[0] == tp.parent()[0]) {
+                                 b.hide();
+                              }
+                           });
+                        } else {
+                           tp.addClass("jq-accordian-open");
+                           $(".body", tp).each(function() {
+                              var b = $(this);  // body
+                              if (b.parent().parent()[0] == tp.parent()[0]) {
+                                 b.show();
+                              }
+                           });
+                        }
                      }
-                  }
-               });
+                  });
+               }
             });
          });
       }
