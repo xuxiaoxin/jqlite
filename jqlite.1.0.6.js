@@ -1,5 +1,5 @@
 /*!
- * jQLite JavaScript Library v1.0.5 (http://code.google.com/p/jqlite/)
+ * jQLite JavaScript Library v1.0.6 (http://code.google.com/p/jqlite/)
  *
  * Copyright (c) 2010 Brett Fattori (bfattori@gmail.com)
  * Licensed under the MIT license
@@ -249,9 +249,10 @@
       }
 
       var evt = null;
-      var eventClass = EVENT_TYPES[eventType] || "Custom";
+      var eventClass = EVENT_TYPES[eventType] || "Event";
       if(document.createEvent) {
          evt = document.createEvent(eventClass);
+         evt._eventClass = eventClass;
          if(eventType) {
             evt.initEvent(eventType, true, true);
          }
@@ -261,6 +262,7 @@
          evt = document.createEventObject();
          if(eventType) {
             evt.type = eventType;
+            evt._eventClass = eventClass;
          }
       }
 
@@ -269,7 +271,7 @@
 
    var fireEvent = function(node, eventType, data) {
       var evt = createEvent(eventType);
-      if (evt.type !== "Custom") {
+      if (evt._eventClass !== "Event") {
          evt.data = data;
          return node.dispatchEvent(evt);
       } else {
@@ -277,7 +279,11 @@
          var handlers = eHandlers[eventType];
          if (handlers) {
             for (var h = 0; h < handlers.length; h++) {
-               if (!handlers[h].call(node, evt, data)) {
+               var args = jQL.isArray(data) ? data : [];
+               args.unshift(evt);
+               var op = handlers[h].apply(node, args);
+               op = (typeof op == "undefined" ? true : op);
+               if (!op) {
                   break;
                }
             }
@@ -312,16 +318,12 @@
    };
 
    /**
-    * jQuery "lite" - Fry In-house solution
+    * jQuery "lite"
     *
     * This is a small subset of support for jQuery-like functionality.  It
     * is not intended to be a full replacement, but it will provide some
     * of the functionality which jQuery provides to allow development
     * using jQuery-like syntax.
-    *
-    * @author Brett Fattori (bfattori@fry.com)
-    * @author $Author$
-    * @version $Revision$
     */
    var jQL = function(s, e) {
       return new jQLp().init(s, e);
@@ -579,7 +581,7 @@
       selector: "",
       context: null,
       length: 0,
-      jquery: "jqlite-1.0.5",
+      jquery: "jqlite-1.0.6",
 
       init: function(s, e) {
 
