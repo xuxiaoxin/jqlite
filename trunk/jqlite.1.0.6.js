@@ -786,7 +786,11 @@
 
       attr: function(name, value) {
          if (typeof name === "string" && value == null) {
-            return this[0].getAttribute(name);
+            if (this[0]) {
+               return this[0].getAttribute(name);
+            } else {
+               return "";
+            }
          } else {
             return this.each(function() {
                if (typeof name === "string") {
@@ -1095,4 +1099,3 @@
    };
 
 })();
-
