@@ -812,20 +812,19 @@
             return jQL(this[0].parentNode);
          } else {
             var pElm = jQL(selector);
-            var us = this[0];
+            var us = this[0].parentNode;
             var found = false;
-            while (us != document.body && !found) {
-               pElm.each(function() {
-                  if (this == us) {
-                     found = true;
-                     return false;
-                  }
-               });
-               if (!found) {
-                  us = us.parentNode;
+            pElm.each(function() {
+               if (this == us) {
+                  found = true;
+                  return false;
                }
+            });
+            if (found) {
+               return jQL(us);
+            } else {
+               return jQL([]);
             }
-            return jQL(us);
          }
       },
 
