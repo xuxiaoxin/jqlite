@@ -807,8 +807,49 @@
          }
       },
 
-      parent: function() {
-         return jQL(this[0].parentNode);
+      parent: function(selector) {
+         if (!selector) {
+            return jQL(this[0].parentNode);
+         } else {
+            var pElm = jQL(selector);
+            var us = this[0];
+            var found = false;
+            while (us != document.body && !found) {
+               pElm.each(function() {
+                  if (this == us) {
+                     found = true;
+                     return false;
+                  }
+               });
+               if (!found) {
+                  us = us.parentNode;
+               }
+            }
+            return jQL(us);
+         }
+      },
+
+      parents: function(selector) {
+         var arr = [];
+         if (!selector) {
+            var us = this[0];
+            while (us != document.body) {
+               us = us.parentNode();
+               arr.push(us);
+            }
+         } else {
+            var pElm = jQL(selector);
+            var us = this[0];
+            while (us != document.body) {
+               pElm.each(function() {
+                  if (this == us) {
+                     arr.push(us);
+                  }
+               });
+               us = us.parentNode;
+            }
+         }
+         return jQL(us);
       },
 
       append: function(child) {
