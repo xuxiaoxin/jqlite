@@ -13,3 +13,7 @@ The following devices have been tested with jQLite:
 
   * IEMobile 6
   * IEMobile 6.5
+
+== Additional Testing ==
+
+jQLite has been tested on Windows in Firefox, Chrome, and Safari.  It is not functional in Internet Explorer (at the moment) due to the way events are attached to elements.
