@@ -1,5 +1,5 @@
 /*!
- * jQLite JavaScript Library v1.0.6 (http://code.google.com/p/jqlite/)
+ * jQLite JavaScript Library v1.0.7a (http://code.google.com/p/jqlite/)
  *
  * Copyright (c) 2010 Brett Fattori (bfattori@gmail.com)
  * Licensed under the MIT license
@@ -581,7 +581,7 @@
       selector: "",
       context: null,
       length: 0,
-      jquery: "jqlite-1.0.6",
+      jquery: "jqlite-1.0.7",
 
       init: function(s, e) {
 
@@ -807,46 +807,159 @@
          }
       },
 
-      parent: function(selector) {
-         if (!selector) {
-            return jQL(this[0].parentNode);
-         } else {
-            var pElm = jQL(selector);
-            var us = this[0].parentNode;
-            var found = false;
-            pElm.each(function() {
-               if (this == us) {
-                  found = true;
-                  return false;
+      index: function(selector) {
+         var idx = -1;
+         if (this.length != 0) {
+            var itm = this[0];
+            if (!selector) {
+               var parent = this.parent();
+               var s = parent[0].firstChild;
+               var arr = [];
+               while (s != null) {
+                  if (s.nodeType === DOM_ELEMENT_NODE) {
+                     arr.push(s);
+                  }
+                  s = s.nextSibling;
                }
-            });
-            if (found) {
-               return jQL(us);
+               jQL.each(s, function(i) {
+                  if (this === itm) {
+                     idx = i;
+                     return false;
+                  }
+               });
             } else {
-               return jQL([]);
+               var elm = jQL(selector)[0];
+               this.each(function(i) {
+                  if (this === elm) {
+                     idx = i;
+                     return false;
+                  }
+               });
             }
          }
+         return idx;
+      },
+
+      next: function(selector) {
+         var arr = [];
+         if (!selector) {
+            this.each(function() {
+               var elm = this.nextSibling;
+               while (elm != null && elm.nodeType !== DOM_ELEMENT_NODE) {
+                  elm = elm.nextSibling;
+               }
+               if (elm != null) {
+                  arr.push(elm);
+               }
+            });
+         } else {
+            var pElm = jQL(selector);
+            this.each(function() {
+               var us = this.nextSibling;
+               while (us != null && us.nodeType !== DOM_ELEMENT_NODE) {
+                  us = us.nextSibling;
+               }
+               if (us != null) {
+                  var found = false;
+                  pElm.each(function() {
+                     if (this == us) {
+                        found = true;
+                        return false;
+                     }
+                  });
+                  if (found) {
+                     arr.push(us);
+                  }
+               }
+            });
+         }
+         return jQL(arr);
+      },
+
+      prev: function(selector) {
+         var arr = [];
+         if (!selector) {
+            this.each(function() {
+               var elm = this.previousSibling;
+               while (elm != null && elm.nodeType !== DOM_ELEMENT_NODE) {
+                  elm = elm.previousSibling;
+               }
+               if (elm != null) {
+                  arr.push(elm);
+               }
+            });
+         } else {
+            var pElm = jQL(selector);
+            this.each(function() {
+               var us = this.previousSibling;
+               while (us != null && us.nodeType !== DOM_ELEMENT_NODE) {
+                  us = us.previousSibling;
+               }
+               if (us != null) {
+                  var found = false;
+                  pElm.each(function() {
+                     if (this == us) {
+                        found = true;
+                        return false;
+                     }
+                  });
+                  if (found) {
+                     arr.push(us);
+                  }
+               }
+            });
+         }
+         return jQL(arr);
+      },
+
+      parent: function(selector) {
+         var arr = [];
+         if (!selector) {
+            this.each(function() {
+               arr.push(this.parentNode);
+            });
+         } else {
+            var pElm = jQL(selector);
+            this.each(function() {
+               var us = this.parentNode;
+               var found = false;
+               pElm.each(function() {
+                  if (this == us) {
+                     found = true;
+                     return false;
+                  }
+               });
+               if (found) {
+                  arr.push(us);
+               }
+            });
+         }
+         return jQL(arr);
       },
 
       parents: function(selector) {
          var arr = [];
          if (!selector) {
-            var us = this[0];
-            while (us != document.body) {
-               us = us.parentNode();
-               arr.push(us);
-            }
+            this.each(function() {
+               var us = this;
+               while (us != document.body) {
+                  us = us.parentNode;
+                  arr.push(us);
+               }
+            });
          } else {
             var pElm = jQL(selector);
-            var us = this[0];
-            while (us != document.body) {
-               pElm.each(function() {
-                  if (this == us) {
-                     arr.push(us);
-                  }
-               });
-               us = us.parentNode;
-            }
+            this.each(function() {
+               var us = this;
+               while (us != document.body) {
+                  pElm.each(function() {
+                     if (this == us) {
+                        arr.push(us);
+                     }
+                  });
+                  us = us.parentNode;
+               }
+            });
          }
          return jQL(arr);
       },
