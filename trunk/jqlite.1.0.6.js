@@ -848,7 +848,7 @@
                us = us.parentNode;
             }
          }
-         return jQL(us);
+         return jQL(arr);
       },
 
       append: function(child) {
