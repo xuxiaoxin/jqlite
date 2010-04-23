@@ -241,7 +241,8 @@
                   onmouseover:"MouseEvents",onmousemove:"MouseEvents",onmouseout:"MouseEvents",oncontextmenu:"MouseEvents",
                   onkeypress:"KeyEvents",onkeydown:"KeyEvents",onkeyup:"KeyEvents",onload:"HTMLEvents",onunload:"HTMLEvents",
                   onabort:"HTMLEvents",onerror:"HTMLEvents",onresize:"HTMLEvents",onscroll:"HTMLEvents",onselect:"HTMLEvents",
-                  onchange:"HTMLEvents",onsubmit:"HTMLEvents",onreset:"HTMLEvents",onfocus:"HTMLEvents",onblur:"HTMLEvents"};
+                  onchange:"HTMLEvents",onsubmit:"HTMLEvents",onreset:"HTMLEvents",onfocus:"HTMLEvents",onblur:"HTMLEvents",
+                  ontouchstart:"MouseEvents",ontouchend:"MouseEvents",ontouchmove:"MouseEvents"};
 
    var createEvent = function(eventType) {
       if (typeof eventType === "string") {
@@ -613,7 +614,22 @@
                els = [h.firstChild];
                h = null;
             } else {
-               els = parseSelector(s, e);
+               var selectors;
+               if (s.indexOf(",") != -1) {
+                  // Multiple selectors - split them
+                  selectors = s.split(",");
+                  for (var n = 0; n < selectors.length; n++) {
+                     selectors[n] = trim(selectors[n]);
+                  }
+               } else {
+                  selectors = [s];
+               }
+
+               var multi = [];
+               for (var m = 0; m < selectors.length; m++) {
+                  multi = multi.concat(parseSelector(selectors[m], e));
+               }
+               els = multi;
             }
 
             push.apply(this, els);
@@ -807,6 +823,13 @@
          }
       },
 
+      eq: function(index) {
+         var elms = this.toArray();
+         var elm = index < 0 ? elms[elms.length + index] : elms[index];
+         this.context = this[0] = elm;
+         this.length = 1;
+      },
+      
       index: function(selector) {
          var idx = -1;
          if (this.length != 0) {
@@ -1137,6 +1160,37 @@
                setHandler(this, "onsubmit", fn);
             } else {
                return fireEvent(this, "onsubmit");
+            }
+         });
+      },
+
+      // TOUCH EVENTS
+      touchstart: function(fn) {
+         return this.each(function() {
+            if (jQL.isFunction(fn)) {
+               setHandler(this, "ontouchstart", fn);
+            } else {
+               return fireEvent(this, "ontouchstart");
+            }
+         });
+      },
+
+      touchend: function(fn) {
+         return this.each(function() {
+            if (jQL.isFunction(fn)) {
+               setHandler(this, "ontouchend", fn);
+            } else {
+               return fireEvent(this, "ontouchend");
+            }
+         });
+      },
+
+      touchmove: function(fn) {
+         return this.each(function() {
+            if (jQL.isFunction(fn)) {
+               setHandler(this, "ontouchmove", fn);
+            } else {
+               return fireEvent(this, "ontouchmove");
             }
          });
       }
