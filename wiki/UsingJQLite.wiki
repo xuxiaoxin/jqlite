@@ -77,6 +77,9 @@ Event Handlers:
   * .focus(function...)
   * .blur(function...)
   * .submit(function...)
+  * .touchstart(function...)
+  * .touchend(function...)
+  * .touchmove(function...)
 
 AHAH:
 
