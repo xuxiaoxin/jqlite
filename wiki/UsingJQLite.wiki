@@ -16,6 +16,7 @@ The following are the types of selectors currently implemented.  The selectors a
   * Class selectors: .bar, .baz
   * Multiple class selectors: “div.button.jq”
   * Descendant selectors: “div.jq span.hotlink”
+  * Multiple selectors: "div.button, div.link"
 
 == Supported Methods ==
 
@@ -47,6 +48,9 @@ Supported methods:
   * .prev(selector)
   * .next()
   * .next(selector)
+  * .children()
+  * .children(selector)
+  * .eq(index)
   * .index()
   * .index(selector)
   * .append(obj)
