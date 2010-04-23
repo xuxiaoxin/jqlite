@@ -1,5 +1,5 @@
 /*!
- * jQLite JavaScript Library v1.0.7a (http://code.google.com/p/jqlite/)
+ * jQLite JavaScript Library v1.0.8 (http://code.google.com/p/jqlite/)
  *
  * Copyright (c) 2010 Brett Fattori (bfattori@gmail.com)
  * Licensed under the MIT license
@@ -581,7 +581,7 @@
       selector: "",
       context: null,
       length: 0,
-      jquery: "jqlite-1.0.7",
+      jquery: "jqlite-1.0.8",
 
       init: function(s, e) {
 
@@ -958,6 +958,37 @@
                      }
                   });
                   us = us.parentNode;
+               }
+            });
+         }
+         return jQL(arr);
+      },
+
+      children: function(selector) {
+         var arr = [];
+         if (!selector) {
+            this.each(function() {
+               var us = this.firstChild;
+               while (us != null) {
+                  if (us.nodeType == DOM_ELEMENT_NODE) {
+                     arr.push(us);
+                  }
+                  us = us.nextSibling;
+               }
+            });
+         } else {
+            var cElm = jQL(selector);
+            this.each(function() {
+               var us = this.firstChild;
+               while (us != null) {
+                  if (us.nodeType == DOM_ELEMENT_NODE) {
+                     cElm.each(function() {
+                        if (this === us) {
+                           arr.push(us);
+                        }
+                     });
+                  }
+                  us = us.nextSibling;
                }
             });
          }
