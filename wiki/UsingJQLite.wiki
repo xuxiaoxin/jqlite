@@ -94,6 +94,7 @@ You can create elements on the fly by calling jQuery with some HTML as the argum
 {{{
    var div = $("<div class='foo'>");
    div.addClass("bar");
+   $(document.body).append(div);
 }}}
 
 == Document Ready Functionality ==
