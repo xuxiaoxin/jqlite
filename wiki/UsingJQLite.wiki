@@ -20,11 +20,13 @@ The following are the types of selectors currently implemented.  The selectors a
 
 == Supported Methods ==
 
-A small subset of the operations which jQuery supports are currently implemented.  All of them are implemented using the chained operation syntax of jQuery. e.g:
+A subset of the operations which jQuery supports are currently implemented.  All of them are implemented using the chained operation syntax of jQuery. e.g:
 {{{
    $("div.foo").each(function() {
       $(this).removeClass("foo").addClass("bar");
    });
+
+   $("div.bar, div.baz").css({ "border": "1px solid red" }).children().addClass("child");
 }}}
 
 Supported methods:
