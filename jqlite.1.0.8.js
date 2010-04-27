@@ -1159,7 +1159,9 @@
             if (jQL.isFunction(fn)) {
                setHandler(this, "onsubmit", fn);
             } else {
-               return fireEvent(this, "onsubmit");
+               if (this.submit) {
+                  this.submit();
+               }
             }
          });
       },
