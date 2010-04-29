@@ -87,6 +87,14 @@ AHAH:
 
   * .load(url, params, function...)
 
+
+A function from jQuery has been added to support the jQAnimation extension.  It returns the current time in milliseconds:
+
+{{{
+   var time = now();
+}}}
+
+
 == Element Creation ==
 
 You can create elements on the fly by calling jQuery with some HTML as the argument:
