@@ -18,6 +18,10 @@
  */
 (function() {
 
+   function now(){
+      return +new Date;
+   }
+
    /*
       Simplified DOM selection engine
       START ---------------------------------------------------------
@@ -1159,9 +1163,7 @@
             if (jQL.isFunction(fn)) {
                setHandler(this, "onsubmit", fn);
             } else {
-               if (this.submit) {
-                  this.submit();
-               }
+               return fireEvent(this, "onsubmit");
             }
          });
       },
@@ -1279,6 +1281,7 @@
       window.jQuery = jQL;
       window.jQuery.fn = jQLp.prototype;
       window.$ = window.jQuery;
+      window.now = now;
    }
 
    // Allow extending jQL or jQLp
