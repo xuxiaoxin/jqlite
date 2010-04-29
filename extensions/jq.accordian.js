@@ -1,6 +1,10 @@
 /*
  * jqAccordian - Accordian extension for jQuery/jQLite.
  *
+ * Copyright (c) 2010 Brett Fattori (bfattori@gmail.com)
+ * Licensed under the MIT license
+ * http://www.opensource.org/licenses/mit-license.php
+ *
  * A simple extension which will convert an UL into an accordian object.
  * The LI elements must contain two elements themselves:
  *
@@ -15,6 +19,10 @@
  *          bodies.  If false, clicking the title will toggle the body open
  *          and closed.
  *
+ *    animated - {boolean} If true, the accordian will open and close using
+ *               the slideUp() and slideDown() animations.  "jqanimation.js"
+ *               extension is required for use!
+ *
  */
 
 
@@ -23,7 +31,8 @@
       jqAccordian: function(opts) {
 
          var o = jQuery.extend({
-            openOne: true
+            openOne: true,
+            animated: false
          }, opts);
 
          return this.each(function() {
@@ -58,14 +67,22 @@
                         $(".body", jQ).each(function() {
                            var b = $(this);  // body
                            if (b.parent().parent()[0] == jQ[0]) {
-                              b.hide();
+                              if (o.animated) {
+                                 b.slideUp(250);
+                              } else {
+                                 b.hide();
+                              }
                            }
                         });
                         // Show our own body
                         $(".body", tjQ.parent()).each(function() {
                            var b = $(this);  // body
                            if (b.parent().parent()[0] == tjQ.parent()[0]) {
-                              b.show();
+                              if (o.animated) {
+                                 b.slideDown(450);
+                              } else {
+                                 b.show();
+                              }
                            }
                         });
                      } else {
@@ -75,7 +92,11 @@
                            $(".body", tp).each(function() {
                               var b = $(this);  // body
                               if (b.parent().parent()[0] == tp.parent()[0]) {
-                                 b.hide();
+                                 if (o.animated) {
+                                    b.slideUp(450);
+                                 } else {
+                                    b.hide();
+                                 }
                               }
                            });
                         } else {
@@ -83,7 +104,11 @@
                            $(".body", tp).each(function() {
                               var b = $(this);  // body
                               if (b.parent().parent()[0] == tp.parent()[0]) {
-                                 b.show();
+                                 if (o.animated) {
+                                    b.slideDown(450);
+                                 } else {
+                                    b.show();
+                                 }
                               }
                            });
                         }
