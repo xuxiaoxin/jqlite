@@ -10,6 +10,33 @@ This is a near-direct port of the jQuery FX engine as an extension.  With this e
 
 For more information, see: [http://api.jquery.com/category/effects/ jQuery FX Documentation]
 
+{{{
+   <script type="text/javascript">
+      $(document).ready(function() {
+         $("div.clickMe").click(function() {
+            $("div.hidden").show(450);
+         });
+      }):
+   </script>
+
+   <style type="text/css">
+      div.hidden {
+         display: none;
+         border: 2px solid #aaf;
+         background: #00f;
+         color: #fff;
+         font-weight: bold;
+         width: 120px;
+         height: 120px;
+      }
+   </style>
+
+   <div class="clickMe">Click here to see a trick</div><br/>
+   <div class="hidden">
+      Are you surprised?
+   </div>
+}}}
+
 == jQAccordian ==
 
 A group of tabs which expand/collapse, either like a radio group, or individually.  You can convert any `UL` element into an accordion by specifying a format like the following.  Each `LI` must contain two elements, one with the class "title" and another with the class "body":
