@@ -4,7 +4,13 @@
 
 The following extensions work with jQLite and jQuery.
 
-== Accordian ==
+== jQAnimation ==
+
+This is a near-direct port of the jQuery FX engine as an extension.  With this extension, you can perform animations on elements within the DOM.  This extension isn't intended to support IE (support checks have been removed) and it doesn't include the 'toggle' type for show/hide (due to the ':hidden' selector not being available).
+
+For more information, see: [http://api.jquery.com/category/effects/ jQuery FX Documentation]
+
+== jQAccordian ==
 
 A group of tabs which expand/collapse, either like a radio group, or individually.  You can convert any `UL` element into an accordion by specifying a format like the following.  Each `LI` must contain two elements, one with the class "title" and another with the class "body":
 
