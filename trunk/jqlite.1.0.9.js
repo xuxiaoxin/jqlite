@@ -1,5 +1,5 @@
 /*!
- * jQLite JavaScript Library v1.0.8 (http://code.google.com/p/jqlite/)
+ * jQLite JavaScript Library v1.0.9 (http://code.google.com/p/jqlite/)
  *
  * Copyright (c) 2010 Brett Fattori (bfattori@gmail.com)
  * Licensed under the MIT license
@@ -586,7 +586,7 @@
       selector: "",
       context: null,
       length: 0,
-      jquery: "jqlite-1.0.8",
+      jquery: "jqlite-1.0.9",
 
       init: function(s, e) {
 
@@ -1163,7 +1163,9 @@
             if (jQL.isFunction(fn)) {
                setHandler(this, "onsubmit", fn);
             } else {
-               return fireEvent(this, "onsubmit");
+               if (this.submit) {
+                  this.submit();
+               }
             }
          });
       },
