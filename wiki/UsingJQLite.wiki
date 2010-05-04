@@ -11,12 +11,13 @@ If you develop your web app to use jQuery in its most simplest way, you should b
 
 The following are the types of selectors currently implemented.  The selectors are implemented using straightforward !JavaScript since regular expressions across browsers aren't consistent:
 
-  * Id selectors: #foo
-  * Element selectors: div, span, etc...
-  * Class selectors: .bar, .baz
-  * Multiple class selectors: “div.button.jq”
-  * Descendant selectors: “div.jq span.hotlink”
-  * Multiple selectors: "div.button, div.link"
+|| Selector Type || Syntax ||
+|| Id || #foo ||
+|| Element || div, span, table ||
+|| Class || .bar, div.baz ||
+|| Multiple class || div.button.jq ||
+|| Descendant || div.jq span.hotlink ||
+|| Multiples || "div.button, div.link" ||
 
 == Supported Methods ==
 
@@ -29,63 +30,54 @@ A subset of the operations which jQuery supports are currently implemented.  All
    $("div.bar, div.baz").css({ "border": "1px solid red" }).children().addClass("child");
 }}}
 
-Supported methods:
+Supported methods: _(links to jQuery Docs)_
 
-  * .each(function...)
-  * .addClass(name)
-  * .removeClass(name)
-  * .toggleClass(name)
-  * .css(name) _getter_
-  * .css(name, value) _setter_
-  * .css(obj) _multi-property setter_
-  * .show(callbackFunction...)
-  * .hide(callbackFunction...)
-  * .hasClass(name)
-  * .html(htmltext)
-  * .parent()
-  * .parent(selector)
-  * .parents()
-  * .parents(selector)
-  * .prev()
-  * .prev(selector)
-  * .next()
-  * .next(selector)
-  * .children()
-  * .children(selector)
-  * .eq(index)
-  * .index()
-  * .index(selector)
-  * .append(obj)
-  * .remove()
-  * .remove(filter)
-  * .empty()
-  * .val() _getter_
-  * .val(value) _setter_
-  * .attr(name) _getter_
-  * .attr(name, value) _setter_
-  * .attr(obj) _multi-attribute setter_
-  * .bind(eventName, function...)
-  * .trigger(eventName, (array))
-  * .extend(obj)
+  * [http://api.jquery.com/each/ .each(function...)]
+  * [http://api.jquery.com/addClass/ .addClass(name)]
+  * [http://api.jquery.com/removeClass/ .removeClass(name)]
+  * [http://api.jquery.com/toggleClass/ .toggleClass(name)]
+  * [http://api.jquery.com/css/ .css(name|obj, value)]
+  * [http://api.jquery.com/show/ .show(callbackFunction...)]
+  * [http://api.jquery.com/hide/ .hide(callbackFunction...)]
+  * [http://api.jquery.com/hasClass/ .hasClass(name)]
+  * [http://api.jquery.com/html/ .html(htmltext)]
+  * [http://api.jquery.com/parent/ .parent(selector)]
+  * [http://api.jquery.com/parents/ .parents(selector)]
+  * [http://api.jquery.com/prev/ .prev(selector)]
+  * [http://api.jquery.com/next/ .next(selector)]
+  * [http://api.jquery.com/children/ .children(selector)]
+  * [http://api.jquery.com/eq/ .eq(index)]
+  * [http://api.jquery.com/index/ .index(optSelector)]
+  * [http://api.jquery.com/append/ .append(obj)]
+  * [http://api.jquery.com/remove/ .remove(filter)]
+  * [http://api.jquery.com/empty/ .empty()]
+  * [http://api.jquery.com/val/ .val(opt)]
+  * [http://api.jquery.com/attr/ .attr(name|obj, optValue)]
+  * [http://api.jquery.com/bind/ .bind(eventName, function...)]
+  * [http://api.jquery.com/trigger/ .trigger(eventName, (array))]
+  * [http://api.jquery.com/extend/ .extend(obj)]
 
-Event Handlers:
+Event Handlers: _(links to jQuery Docs)_
 
-  * .click(function...)
-  * .mouseover(function...)
-  * .mouseout(function...)
-  * .mouseup(function...)
-  * .mousedown(function...)
-  * .change(function...)
-  * .focus(function...)
-  * .blur(function...)
-  * .submit(function...)
+  * [http://api.jquery.com/click/ .click(function...)]
+  * [http://api.jquery.com/mouseover/ .mouseover(function...)]
+  * [http://api.jquery.com/mouseout/ .mouseout(function...)]
+  * [http://api.jquery.com/mouseup/ .mouseup(function...)]
+  * [http://api.jquery.com/mousedown/ .mousedown(function...)]
+  * [http://api.jquery.com/change/ .change(function...)]
+  * [http://api.jquery.com/focus/ .focus(function...)]
+  * [http://api.jquery.com/blur/ .blur(function...)]
+  * [http://api.jquery.com/submit/ .submit(function...)]
+
+Non-jQuery Events:
+
   * .touchstart(function...)
   * .touchend(function...)
   * .touchmove(function...)
 
 AHAH:
 
-  * .load(url, params, function...)
+  * [http://api.jquery.com/load/ .load(url, params, function...)]
 
 
 A function from jQuery has been added to support the [http://code.google.com/p/jqlite/wiki/Extensions jQAnimation] extension.  It returns the current time in milliseconds:
