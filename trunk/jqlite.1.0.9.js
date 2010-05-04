@@ -45,34 +45,53 @@
 
          var elName = chunk.charAt(0) !== "." ? chunk.split(".")[0] : "*";
          var classes = chunk.split(".");
+         var attrs = null;
+
+         // Remove any attributes from the element
+         if (elName.indexOf("[") != -1) {
+            attrs = elName;
+            elName = elName.substr(0, elName.indexOf("["));
+         }
 
          var cFn = function(node) {
             var aC = arguments.callee;
-            if (!aC.needClass || hasClasses(node, aC.classes)) {
+            if ((!aC.needClass || hasClasses(node, aC.classes)) &&
+                (!aC.needAttribute || hasAttributes(node, aC.attributes))) {
                return node;
             }
          };
 
-         // If we have an element name, find tags in the context
-         // of that type
-         if (elName !== "") {
-            var cnodes = [];
-            for (var cxn = 0; cxn < contextNodes.length; cxn++) {
-               var x = contextNodes[cxn].getElementsByTagName(elName);
-               for (var a = 0;a < x.length; a++) {
-                  cnodes.push(x[a]);
-               }
+         // Find tags in the context of the element
+         var cnodes = [];
+         for (var cxn = 0; cxn < contextNodes.length; cxn++) {
+            var x = contextNodes[cxn].getElementsByTagName(elName);
+            for (var a = 0;a < x.length; a++) {
+               cnodes.push(x[a]);
             }
-            if (classes) {
-               classes.shift();
-            }
-            ctxNode = [];
-            cFn.classes = classes;
-            cFn.needClass = (chunk.indexOf(".") != -1 && classes.length > 0);
-            for (var j = 0; j < cnodes.length; j++) {
-               if (cFn(cnodes[j])) {
-                  ctxNode.push(cnodes[j]);
+         }
+         if (classes) {
+            classes.shift();
+         }
+         ctxNode = [];
+         cFn.classes = classes;
+
+         if (attrs != null) {
+            var attrib = [];
+            do {
+               var sa = /\[([^\]]*)\]/g.exec(attrs);
+               if (sa != null) {
+                  attrib.push(sa[1]);
                }
+            } while(sa != null);
+         }
+
+         cFn.attributes = attrs != null ? attrib : null;
+         cFn.needClass = (chunk.indexOf(".") != -1 && classes.length > 0);
+         cFn.needAttribute = (attrs != null);
+
+         for (var j = 0; j < cnodes.length; j++) {
+            if (cFn(cnodes[j])) {
+               ctxNode.push(cnodes[j]);
             }
          }
       }
@@ -141,6 +160,22 @@
       }
       return (cC == 0);
    };
+
+   var hasAttributes = function(node, attrs) {
+      var opRE = /([^\[]*)([!\*]?=)(.*)/;
+      var satisfied = true;
+      for (var i = 0; i < attrs.length; i++) {
+         var tst = opRE.exec(attrs[i]);
+         switch (tst[2]) {
+            case "=": satisfied &= (node.getAttribute(tst[1]) === tst[3]); break;
+            case "!=": satisfied &= (node.getAttribute(tst[1]) !== tst[3]); break;
+            case "*=": satisfied &= (node.getAttribute(tst[1]).indexOf(tst[3]) != -1); break;
+            default: satisfied = false;
+         }
+      }
+      return satisfied;
+   };
+
    /*
       END -----------------------------------------------------------
       Simplified DOM selection engine
@@ -311,7 +346,19 @@
       }
       if (eventClass) {
          // Let the browser handle it
-         node.addEventListener(eventType, fn, false);
+         var handler = function(evt) {
+            var aC = arguments.callee;
+            var args = evt.data || [];
+            args.unshift(evt);
+            var op = aC.fn.apply(node, args);
+            if (typeof op != "undefined" && !op) {
+               evt.preventDefault();
+               return false;
+            }
+            return true;
+         };
+         handler.fn = fn;
+         node.addEventListener(eventType, handler, false);
       } else {
          if (!node._handlers) {
             node._handlers = {};
