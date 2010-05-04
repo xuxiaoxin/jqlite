@@ -30,9 +30,9 @@ Attribute selectors use regular expressions, so may exhibit inconsistencies acro
 || `*=` || *name contains value* ||
 
 {{{
-   var hiddens = $("input[type=hidden]");
-   var notHiddens = $("input[type!=hidden]");
-   var nameHasFoo = $("input[name*=foo]");
+   var hiddens = $("input[type=hidden]");  // Finds <input type='hidden'/>
+   var notHiddens = $("input[type!=hidden]"); // Finds inputs not of type 'hidden'
+   var nameHasFoo = $("input[name*=foo]");  // Will find <input name='foobar'/>
 }}}
 
 == Supported Methods ==
