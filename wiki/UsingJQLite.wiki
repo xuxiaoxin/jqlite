@@ -18,6 +18,7 @@ The following are the types of selectors currently implemented.  The selectors a
 || Multiple class || div.button.jq ||
 || Descendant || div.jq span.hotlink ||
 || Multiples || "div.button, div.link" ||
+|| Attribute || input![type=hidden] ||
 
 == Supported Methods ==
 
