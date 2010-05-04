@@ -20,6 +20,21 @@ The following are the types of selectors currently implemented.  The selectors a
 || Multiples || "div.button, div.link" ||
 || Attribute || input[[type=hidden]] ||
 
+
+=== Supported Attribute Selectors ===
+
+Three of the attribute selector types is supported.  Additionally, you can have multiple attribute selectors in a single selector.  The attribute selectors must immediately follow the element name (preceed any class selectors):
+
+  * `=` - name equals value
+  * `!=` - name is not equal to value
+  * `*=` - name contains value
+
+{{{
+   var hiddens = $("input[type=hidden]");
+   var notHiddens = $("input[type!=hidden]");
+   var nameHasFoo = $("input[name*=foo]");
+}}}
+
 == Supported Methods ==
 
 A subset of the operations which jQuery supports are currently implemented.  All of them are implemented using the chained operation syntax of jQuery. e.g:
