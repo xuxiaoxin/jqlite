@@ -88,7 +88,7 @@ AHAH:
   * .load(url, params, function...)
 
 
-A function from jQuery has been added to support the [http://code.google.com/p/jqlite/Wiki/Extensions jQAnimation] extension.  It returns the current time in milliseconds:
+A function from jQuery has been added to support the [http://code.google.com/p/jqlite/wiki/Extensions jQAnimation] extension.  It returns the current time in milliseconds:
 
 {{{
    var time = now();
