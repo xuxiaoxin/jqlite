@@ -25,9 +25,9 @@ The following are the types of selectors currently implemented.  The selectors a
 
 Attribute selectors use regular expressions, so may exhibit inconsistencies across platforms. Three of the attribute selector types is supported.  Additionally, you can have multiple attribute selectors in a single selector.  _The attribute selectors must immediately follow the element name (preceed any class selectors)_:
 
-  * `=` *name equals value*
-  * `!=` *name is not equal to value*
-  * `*=` *name contains value*
+|| `=` || *name equals value* ||
+|| `!=` || *name is not equal to value* ||
+|| `*=` || *name contains value* ||
 
 {{{
    var hiddens = $("input[type=hidden]");
