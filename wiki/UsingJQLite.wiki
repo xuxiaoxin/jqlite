@@ -37,6 +37,18 @@ Attribute selectors use regular expressions, so may exhibit inconsistencies acro
 
 == Supported Methods ==
 
+Supported object methods:
+
+|| `jQuery.noop()`:boolean || A no-op function (no action) || 
+|| `jQuery.isFunction(obj)`:boolean || Determine if the input is a Function ||
+|| `jQuery.isArray(obj)`:boolean || Determine if the input is an Array ||
+|| `jQuery.isPlainObject(obj)`:boolean || Determine if the input is a plain Javascript Object ||
+|| `jQuery.merge(obj1, obj2)`:obj || Merges two objects into one. Works on Arrays an Objects ||
+|| `jQuery.toPList(obj)`:string || Converts a Javascript Object into a query string ||
+|| `jQuery.makeArray(obj[, results])`:array || Converts the object into an Array. If you provide the second argument (an array), the two will be merged into one. ||
+
+Supported instance methods: _(links to jQuery Docs)_
+
 A subset of the operations which jQuery supports are currently implemented.  All of them are implemented using the chained operation syntax of jQuery. e.g:
 {{{
    $("div.foo").each(function() {
@@ -45,8 +57,6 @@ A subset of the operations which jQuery supports are currently implemented.  All
 
    $("div.bar, div.baz").css({ "border": "1px solid red" }).children().addClass("child");
 }}}
-
-Supported methods: _(links to jQuery Docs)_
 
   * [http://api.jquery.com/each/ .each(function...)]
   * [http://api.jquery.com/addClass/ .addClass(name)]
@@ -91,9 +101,30 @@ Non-jQuery Events:
   * .touchend(function...)
   * .touchmove(function...)
 
+
+AJAX:
+
+The Ajax in jQLite isn't a pure match to jQuery.  It is extremely simplified due to limitations on the platform.  There is an `ajax` object which has three methods for handling Ajax requests.
+
+  * *send:* function(url, params, callback)
+  * *complete:* function(xhr, callback)
+  * *error:* function(xhr, callback)
+
+{{{
+   jQuery.ajax.send("http://www.google.com", function(data, status) {
+      alert("Got the data and it's " + data.length + " bytes.");
+   });
+}}}
+
 AHAH:
 
   * [http://api.jquery.com/load/ .load(url, params, function...)]
+
+{{{
+   // Load the contents of my_page.html into the DIV element
+   // passing two parameters to the page
+   $("div.target").load("my_page.jsp", { foo: 1, bar: "baz" });
+}}}
 
 
 A function from jQuery has been added to support the [http://code.google.com/p/jqlite/wiki/Extensions jQAnimation] extension.  It returns the current time in milliseconds:
