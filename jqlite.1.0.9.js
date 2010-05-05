@@ -76,13 +76,10 @@
          cFn.classes = classes;
 
          if (attrs != null) {
-            var attrib = [];
-            do {
-               var sa = /\[([^\]]*)\]/g.exec(attrs);
-               if (sa != null) {
-                  attrib.push(sa[1]);
-               }
-            } while(sa != null);
+            var b1 = attrs.indexOf("[");
+            var b2 = attrs.lastIndexOf("]");
+            var as = attrs.substring(b1 + 1,b2);
+            var attrib = as.split("][");
          }
 
          cFn.attributes = attrs != null ? attrib : null;
@@ -162,14 +159,17 @@
    };
 
    var hasAttributes = function(node, attrs) {
-      var opRE = /([^\[]*)([!\*]?=)(.*)/;
       var satisfied = true;
       for (var i = 0; i < attrs.length; i++) {
-         var tst = opRE.exec(attrs[i]);
-         switch (tst[2]) {
-            case "=": satisfied &= (node.getAttribute(tst[1]) === tst[3]); break;
-            case "!=": satisfied &= (node.getAttribute(tst[1]) !== tst[3]); break;
-            case "*=": satisfied &= (node.getAttribute(tst[1]).indexOf(tst[3]) != -1); break;
+         var tst = attrs[i].split("=");
+         var op = (tst[0].indexOf("!") != -1 || tst[0].indexOf("*") != -1) ? tst[0].charAt(tst[0].length - 1) + "=" : "=";
+         if (op != "=") {
+            tst[0] = tst[0].substring(0, tst[0].length - 1);
+         }
+         switch (op) {
+            case "=": satisfied &= (node.getAttribute(tst[0]) === tst[1]); break;
+            case "!=": satisfied &= (node.getAttribute(tst[0]) !== tst[1]); break;
+            case "*=": satisfied &= (node.getAttribute(tst[0]).indexOf(tst[1]) != -1); break;
             default: satisfied = false;
          }
       }
@@ -417,6 +417,11 @@
    };
 
    /**
+    * NoOp function (empty)
+    */
+   jQL.noop = function() {};
+
+   /**
     * Test if the given object is a function
     * @param obj
     */
@@ -448,7 +453,8 @@
          return false;
       }
 
-      // Own properties are enumerated firstly     var key;
+      // Own properties are enumerated firstly     
+      var key;
       for ( key in obj ) {}
       return key === undefined || hasOwnProperty.call( obj, key );
    };
@@ -880,7 +886,7 @@
          this.context = this[0] = elm;
          this.length = 1;
       },
-      
+
       index: function(selector) {
          var idx = -1;
          if (this.length != 0) {
@@ -1389,5 +1395,4 @@
       // Return the modified object
       return target;
    };
-
 })();
