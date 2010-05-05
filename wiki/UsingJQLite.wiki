@@ -12,13 +12,13 @@ If you develop your web app to use jQuery in its most simplest way, you should b
 The following are the types of selectors currently implemented.  The selectors are implemented using straightforward !JavaScript since regular expressions across browsers aren't consistent:
 
 || *Selector Type* || *Syntax* ||
-|| Id || #foo ||
-|| Element || div, span, table ||
-|| Class || .bar, div.baz ||
-|| Multiple class || div.button.jq ||
-|| Descendant || div.jq span.hotlink ||
-|| Multiples || "div.button, div.link" ||
-|| Attribute || input[[type=hidden]] ||
+|| Id || `#foo` ||
+|| Element || `div`, `span`, `table` ||
+|| Class || `.bar`, `div.baz` ||
+|| Multiple class || `div.button.jq` ||
+|| Descendant || `div.jq span.hotlink` ||
+|| Multiples || `"div.button, div.link"` ||
+|| Attribute || `input[type=hidden]` ||
 
 
 === Supported Attribute Selectors ===
