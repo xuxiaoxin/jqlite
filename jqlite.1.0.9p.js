@@ -180,10 +180,15 @@
             }
 
             var cFn = function(node) {
-               var aC = arguments.callee;
-               if ((!aC.needClass || hasClasses(node, aC.classes)) &&
-                   (!aC.needAttribute || hasAttributes(node, aC.attributes))) {
-                  return node;
+               Profiler.enter("parseChunks.cFn");
+               try {
+                  var aC = arguments.callee;
+                  if ((!aC.needClass || hasClasses(node, aC.classes)) &&
+                      (!aC.needAttribute || hasAttributes(node, aC.attributes))) {
+                     return node;
+                  }
+               } finally {
+                  Profiler.exit();
                }
             };
 
