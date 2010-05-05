@@ -13,8 +13,8 @@ The following are the types of selectors currently implemented.  The selectors a
 
 || *Selector Type* || *Syntax* ||
 || Id || `#foo` ||
-|| Element || `div`, `span`, `table` ||
-|| Class || `.bar`, `div.baz` ||
+|| Element || `div` or `span` or `table` ||
+|| Class || `.bar` or `div.baz` ||
 || Multiple class || `div.button.jq` ||
 || Descendant || `div.jq span.hotlink` ||
 || Multiples || `"div.button, div.link"` ||
