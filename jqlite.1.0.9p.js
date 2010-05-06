@@ -114,12 +114,13 @@
       /**
        * Dump the profiles that are currently in the stack to a debug window.
        * The profile stack will be cleared after the dump.
+       * @param el {DOMElement} A DOM element to write the output to, instead of the console
        */
-      Profiler.dump = function() {
+      Profiler.dump = function(el) {
          if (window.profileStack.length > 0) {
             var rProfs = "";
             for (var x in window.profileStack)
-               rProfs += (rProfs.length > 0 ? "," : "") + window.profileStack[x];
+               rProfs += (rProfs.length > 0 ? "," : "") + x;
 
             alert("Profile stack overflow!\n\n    Profiles:\n    " + rProfs);
             throw("Profile stack overflow");
@@ -129,18 +130,23 @@
          d = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
 
          var rev = window.profiles.reverse();
-
-         console.warn("PROFILER RESULTS @ " + d + "\n---------------------------------------------------\n");
          var totalTime = 0;
          var out = "";
-         for (var x in rev)
-         {
+         for (var x in rev) {
             var avg = Math.round(rev[x].totalMS / rev[x].execs);
             if (rev[x].indent.length == 0) totalTime += rev[x].totalMS;
             out += rev[x].indent + rev[x].name + " (" + (rev[x].totalMS < 1 ? "<1" : rev[x].totalMS) + " ms) [" + rev[x].execs + " @ " + (avg < 1 ? "<1" : avg) + " ms]\n";
          }
          out += " \nTotal: " + totalTime + " ms";
-         console.debug(out);
+
+         if (el) {
+            var msg = "<pre>PROFILER RESULTS @ " + d + "\n---------------------------------------------------\n" + out + "</pre>";
+            msg = msg.replace(/\n/g, "<br/>").replace(/\s/g,"&nbsp;");
+            jQL(el).html(msg);
+         } else {
+            console.warn("PROFILER RESULTS @ " + d + "\n---------------------------------------------------\n");            
+            console.info(out);
+         }
 
          Profiler.resetProfiles();
       };
