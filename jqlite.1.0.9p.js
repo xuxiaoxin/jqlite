@@ -32,44 +32,33 @@
    // keep track of all object instances and global variables managed by this library
    if(!window.Profiler)
    {
-      window.Profiler={};
+      window.Profiler={
+         profileStack: [],
+         allProfiles: {},
+         profiles: []
+      };
 
       /**
        * Add a profile monitor to the stack of running profiles.
        * @param prof {String} The name of the profile
        */
       Profiler.enter = function(prof) {
-         if (window.profiles == null) {
-            window.profileStack = [];
-            window.allProfiles = {};
-            window.profiles = [];
-         }
-
-         var profile = null;
-
-         if (window.allProfiles[prof] == null) {
-            window.allProfiles[prof] = {};
-            profile = window.allProfiles[prof];
-
-            profile.name = prof;
-            profile.startMS = new Date();
-            profile.execs = 0;
-            profile.totalMS = 0;
-            profile.instances = 1;
-            profile.indent = "";
-            profile.pushed = false;
-
-            for (var x = 0; x < window.profileStack.length; x++)
-               profile.indent += "  ";
+         var profile = Profiler.allProfiles[prof];
+         if (profile == null) {
+            // Create a monitor
+            profile = Profiler.allProfiles[prof] = {
+               name: prof,
+               startMS: new Date(),
+               execs: 0,
+               totalMS: 0,
+               instances: 1,
+               pushed: false
+            };
          } else {
-            profile = window.allProfiles[prof];
-            if (profile.instances == 0)
-               profile.startMS = new Date();
-
+            profile.startMS = profile.instances == 0 ? new Date() : profile.startMS;
             profile.instances++;
          }
-
-         window.profileStack.push(profile);
+         Profiler.profileStack.push(profile);
       };
 
       /**
@@ -81,24 +70,21 @@
        * result in a stack overflow.
        */
       Profiler.exit = function() {
-         if (window.profileStack.length == 0) {
+         if (Profiler.profileStack.length == 0) {
             var msg = "Profile stack underflow";
-            console.error(msg);
+            if (typeof console !== "undefined") { console.error(msg); }
             throw(msg);
-            return;
          }
 
-         var profile = window.profileStack.pop();
-
+         var profile = Profiler.profileStack.pop();
          profile.endMS = new Date();
          profile.execs++;
          profile.instances--;
-         if (profile.instances == 0)
-            profile.totalMS += (profile.endMS.getTime() - profile.startMS.getTime());
-
+         profile.totalMS += profile.instances == 0 ? (profile.endMS.getTime() - profile.startMS.getTime()) : 0;
          if (!profile.pushed) {
+            // If we haven't remembered it, do that now
             profile.pushed = true;
-            window.profiles.push(profile);
+            Profiler.profiles.push(profile);
          }
       };
 
@@ -106,9 +92,9 @@
        * Reset any currently running profiles and clear the stack.
        */
       Profiler.resetProfiles = function() {
-         window.profiles = [];
-         window.allProfiles = {};
-         window.profileStack = [];
+         Profiler.profileStack = [];
+         Profiler.allProfiles = {};
+         Profiler.profiles = [];
       };
 
       /**
@@ -117,34 +103,37 @@
        * @param el {DOMElement} A DOM element to write the output to, instead of the console
        */
       Profiler.dump = function(el) {
-         if (window.profileStack.length > 0) {
+         if (Profiler.profileStack.length > 0) {
+            // overflow - profiles left in stack
             var rProfs = "";
-            for (var x in window.profileStack)
+            for (var x in Profiler.profileStack) {
                rProfs += (rProfs.length > 0 ? "," : "") + x;
-
-            alert("Profile stack overflow!\n\n    Profiles:\n    " + rProfs);
-            throw("Profile stack overflow");
+            }
+            throw("Profile stack overflow.  Running profiles: " + rProfs);
          }
 
          var d = new Date();
          d = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
 
-         var rev = window.profiles.reverse();
+         var rev = Profiler.profiles.reverse();
          var totalTime = 0;
          var out = "";
-         for (var x in rev) {
-            var avg = Math.round(rev[x].totalMS / rev[x].execs);
-            if (rev[x].indent.length == 0) totalTime += rev[x].totalMS;
-            out += rev[x].indent + rev[x].name + " (" + (rev[x].totalMS < 1 ? "<1" : rev[x].totalMS) + " ms) [" + rev[x].execs + " @ " + (avg < 1 ? "<1" : avg) + " ms]\n";
+         for (var r in rev) {
+            var avg = Math.round(rev[r].totalMS / rev[r].execs);
+            totalTime += rev[r].totalMS;
+            out += "# " + rev[r].name + " | " + (rev[r].totalMS < 1 ? "<1" : rev[r].totalMS) + " ms | " + rev[r].execs + " @ " + (avg < 1 ? "<1" : avg) + " ms\n";
          }
-         out += " \nTotal: " + totalTime + " ms";
+         out += "# Total Time: | " + totalTime + " ms | \n";
 
          if (el) {
-            var msg = "<pre>PROFILER RESULTS @ " + d + "\n---------------------------------------------------\n" + out + "</pre>";
-            msg = msg.replace(/\n/g, "<br/>").replace(/\s/g,"&nbsp;");
+            var msg = "<table border='1' cellspacing='0' cellpadding='2'><tr><td colspan='3'>PROFILER RESULTS @ " + d + "</td></tr>";
+            msg += "<tr><th>Profile Name</th><th>Total</th><th>Execs @ Avg Time</th></tr>";
+            out = out.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/#/g, "<tr><td>")
+                    .replace(/\|/g, "</td><td>").replace(/\n/g,"</td></tr>");
+            msg += out + "</table>";
             jQL(el).html(msg);
          } else {
-            console.warn("PROFILER RESULTS @ " + d + "\n---------------------------------------------------\n");            
+            console.warn("PROFILER RESULTS @ " + d + "\n---------------------------------------------------\n");
             console.info(out);
          }
 
@@ -563,7 +552,12 @@
     * using jQuery-like syntax.
     */
    var jQL = function(s, e) {
-      return new jQLp().init(s, e);
+      Profiler.enter("jQL()");
+      try {
+         return new jQLp().init(s, e);
+      } finally {
+         Profiler.exit();
+      }
    },
    document = window.document,
    hasOwnProperty = Object.prototype.hasOwnProperty,
