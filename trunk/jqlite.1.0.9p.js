@@ -161,7 +161,8 @@
 
          // Is the chunk an Id selector?
          if (chunk.charAt(0) == "#") {
-            ctxNode = [document.getElementById(chunk.substring(1))];
+            var idNode = document.getElementById(chunk.substring(1));
+            ctxNode = idNode ? [idNode] : [];
          } else {
 
             var elName = chunk.charAt(0) !== "." ? chunk.split(".")[0] : "*";
@@ -639,7 +640,7 @@
             return false;
          }
 
-         // Own properties are enumerated firstly     
+         // Own properties are enumerated firstly
          var key;
          for ( key in obj ) {}
          return key === undefined || hasOwnProperty.call( obj, key );
