@@ -966,11 +966,15 @@
       // HTML
 
       html: function(h) {
-         return this.each(function() {
-            var o = stripScripts(h);
-            this.innerHTML = o.data;
-            jQL.evalScripts(o.scripts);
-         });
+         if (!h) {
+            return this[0].innerHTML;
+         } else {
+            return this.each(function() {
+               var o = stripScripts(h);
+               this.innerHTML = o.data;
+               jQL.evalScripts(o.scripts);
+            });
+         }
       },
 
       attr: function(name, value) {
