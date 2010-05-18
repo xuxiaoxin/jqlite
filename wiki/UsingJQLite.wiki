@@ -44,8 +44,11 @@ Supported object methods:
 || `jQuery.isArray(obj)`:boolean || Determine if the input is an Array ||
 || `jQuery.isPlainObject(obj)`:boolean || Determine if the input is a plain Javascript Object ||
 || `jQuery.merge(obj1, obj2)`:obj || Merges two objects into one. Works on Arrays an Objects ||
-|| `jQuery.toPList(obj)`:string || Converts a Javascript Object into a query string ||
+|| `jQuery.param(obj)`:string || Converts a Javascript Object or Array into a query string ||
 || `jQuery.makeArray(obj[, results])`:array || Converts the object into an Array. If you provide the second argument (an array), the two will be merged into one. ||
+|| `jQuery.trim(str)`:String || Remove leading and trailing whitespace from string ||
+|| `jQuery.data(elem, key, data)` || Add arbitrary data to the given DOM element ||
+|| `jQuery.removeData(elem, key)` || Remove arbitrary data from the given DOM element ||
 
 Supported instance methods: _(links to jQuery Docs)_
 
@@ -81,6 +84,8 @@ A subset of the operations which jQuery supports are currently implemented.  All
   * [http://api.jquery.com/attr/ .attr([name/obj[, value]])]
   * [http://api.jquery.com/bind/ .bind(eventName, function...)]
   * [http://api.jquery.com/trigger/ .trigger(eventName[, array]))]
+  * [http://api.jquery.com/data/ .data(key [, value]))]
+  * [http://api.jquery.com/data/ .removeData(key)]
 
 Event Handlers: _(links to jQuery Docs)_
 
