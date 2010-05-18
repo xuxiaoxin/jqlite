@@ -1,5 +1,5 @@
 /*!
- * jQLite JavaScript Library v1.0.9p (http://code.google.com/p/jqlite/)
+ * jQLite JavaScript Library v1.1.0p (http://code.google.com/p/jqlite/)
  * This includes a profiler for the selector engine
  *
  * Copyright (c) 2010 Brett Fattori (bfattori@gmail.com)
@@ -677,8 +677,8 @@
       }
    };
 
-   jQL.toPList = function(params) {
-      Profiler.enter("jQL.toPList");
+   jQL.param = function(params) {
+      Profiler.enter("jQL.param");
       try {
          var pList = "";
          if (params) {
@@ -730,6 +730,101 @@
       }
    };
 
+   var expando = "jQuery" + now(), uuid = 0, windowData = {};
+
+   // The following elements throw uncatchable exceptions if you
+   // attempt to add expando properties to them.
+   jQL.noData = {
+      "embed": true,
+      "object": true,
+      "applet": true
+   };
+
+   jQL.cache = {};
+
+   jQL.data = function( elem, name, data ) {
+      Profiler.enter("jQL.data");
+      try {
+         if ( elem.nodeName && jQuery.noData[elem.nodeName.toLowerCase()] ) {
+            return;
+         }
+
+         elem = elem == window ?
+            windowData :
+            elem;
+
+         var id = elem[ expando ];
+
+         // Compute a unique ID for the element
+         if ( !id ) { id = elem[ expando ] = ++uuid; }
+
+         // Only generate the data cache if we're
+         // trying to access or manipulate it
+         if ( name && !jQuery.cache[ id ] ) {
+            jQuery.cache[ id ] = {};
+         }
+
+         // Prevent overriding the named cache with undefined values
+         if ( data !== undefined ) {
+            jQuery.cache[ id ][ name ] = data;
+         }
+
+         // Return the named cache data, or the ID for the element
+         return name ?
+            jQuery.cache[ id ][ name ] :
+            id;
+      } finally {
+         Profiler.exit();
+      }
+   };
+
+   jQL.removeData = function( elem, name ) {
+      Profiler.enter("jQL.removeData");
+      try {
+         elem = elem == window ?
+            windowData :
+            elem;
+
+         var id = elem[ expando ];
+
+         // If we want to remove a specific section of the element's data
+         if ( name ) {
+            if ( jQuery.cache[ id ] ) {
+               // Remove the section of cache data
+               delete jQuery.cache[ id ][ name ];
+
+               // If we've removed all the data, remove the element's cache
+               name = "";
+
+               for ( name in jQuery.cache[ id ] )
+                  break;
+
+               if ( !name ) {
+                  jQuery.removeData( elem );
+               }
+            }
+
+         // Otherwise, we want to remove all of the element's data
+         } else {
+            // Clean up the element expando
+            try {
+               delete elem[ expando ];
+            } catch(e){
+               // IE has trouble directly removing the expando
+               // but it's ok with using removeAttribute
+               if ( elem.removeAttribute ) {
+                  elem.removeAttribute( expando );
+               }
+            }
+
+            // Completely remove the data cache
+            delete jQuery.cache[ id ];
+         }
+      } finally {
+         Profiler.exit();
+      }
+   };
+
    jQL.ajax = {
       status: -1,
       statusText: "",
@@ -765,7 +860,7 @@
             }
 
             // Poll for readyState == 4
-            var p = jQL.toPList(params);
+            var p = jQL.param(params);
             if (p.length != 0) {
                url += (url.indexOf("?") == -1 ? "?" : "&") + p;
             }
@@ -864,7 +959,7 @@
       selector: "",
       context: null,
       length: 0,
-      jquery: "jqlite-1.0.9",
+      jquery: "jqlite-1.1.0p",
 
       init: function(s, e) {
          Profiler.enter("jQLp.init");
@@ -888,9 +983,9 @@
                } else if (jQL.isArray(s)) {
                   // An array of elements
                   els = s;
-               } else if (typeof s === "string" && trim(s).indexOf("<") == 0 && trim(s).indexOf(">") != -1) {
+               } else if (typeof s === "string" && jQL.trim(s).indexOf("<") == 0 && jQL.trim(s).indexOf(">") != -1) {
                   // This is most likely html, so create an element for them
-                  var elm = trim(s).indexOf("<option") == 0 ? "SELECT" : "DIV";
+                  var elm = jQL.trim(s).indexOf("<option") == 0 ? "SELECT" : "DIV";
                   var h = document.createElement(elm);
                   h.innerHTML = s;
                   // Extract the element
@@ -902,7 +997,7 @@
                      // Multiple selectors - split them
                      selectors = s.split(",");
                      for (var n = 0; n < selectors.length; n++) {
-                        selectors[n] = trim(selectors[n]);
+                        selectors[n] = jQL.trim(selectors[n]);
                      }
                   } else {
                      selectors = [s];
@@ -952,6 +1047,50 @@
                readyStack.push(fn);
                return this;
             }
+         } finally {
+            Profiler.exit();
+         }
+      },
+
+      data: function( key, value ) {
+         Profiler.enter("jQLp.data");
+         try {
+            if ( typeof key === "undefined" && this.length ) {
+               return jQuery.data( this[0] );
+
+            } else if ( typeof key === "object" ) {
+               return this.each(function() {
+                  jQuery.data( this, key );
+               });
+            }
+
+            var parts = key.split(".");
+            parts[1] = parts[1] ? "." + parts[1] : "";
+
+            if ( value === undefined ) {
+
+               if ( data === undefined && this.length ) {
+                  data = jQuery.data( this[0], key );
+               }
+               return data === undefined && parts[1] ?
+                  this.data( parts[0] ) :
+                  data;
+            } else {
+               return this.each(function() {
+                  jQuery.data( this, key, value );
+               });
+            }
+         } finally {
+            Profiler.exit();
+         }
+      },
+
+      removeData: function( key ) {
+         Profiler.enter("jQLp.removeData");
+         try {
+            return this.each(function() {
+               jQuery.removeData( this, key );
+            });
          } finally {
             Profiler.exit();
          }
@@ -1689,7 +1828,7 @@
       }
    };
 
-   var trim = function(str) {
+   jQL.trim = function(str) {
       Profiler.enter("trim");
       try {
          if (str != null) {
