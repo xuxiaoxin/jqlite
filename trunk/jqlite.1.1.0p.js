@@ -1829,7 +1829,7 @@
    };
 
    jQL.trim = function(str) {
-      Profiler.enter("trim");
+      Profiler.enter("jQL.trim");
       try {
          if (str != null) {
             return str.toString().replace(/^\s*|\s*$/g,"");
