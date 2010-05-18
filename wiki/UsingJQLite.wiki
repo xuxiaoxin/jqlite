@@ -1,7 +1,7 @@
 #summary Supported functionality in jQLite
 #labels Featured
 
-= Quick Summary of Supported Features =
+= Summary of Supported Features =
 
 jQLite establishes itself as "jQuery" and also exposes the "$" constructor.  You cannot use jQuery and jQLite together on a page.  Since this is intended to be a stand-in for jQuery, it isn't going to support all of the features of jQuery.  This is intended to be a close match to simple functionality needed on a mobile device.  The main focus was element selection, CSS manipulation, AJAX/AHAH, and some event handling.  Things like animation don't make as much sense due to the limited power of some mobile devices.
 
