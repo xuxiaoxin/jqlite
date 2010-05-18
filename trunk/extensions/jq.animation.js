@@ -17,9 +17,7 @@
  * Created: 04/28/2010
  * Modified $Date$
  */
-
 (function(jQuery) {
-   var expando = "jQuery" + now(), uuid = 0, windowData = {};
    // exclude the following css properties to add px
    var exclude = /z-?index|font-?weight|opacity|zoom|line-?height/i,
        defaultView = document.defaultView || {};
@@ -40,73 +38,6 @@
    };
 
    jQuery.extend({
-      cache: {},
-
-      data: function( elem, name, data ) {
-         elem = elem == window ?
-            windowData :
-            elem;
-
-         var id = elem[ expando ];
-
-         // Compute a unique ID for the element
-         if ( !id )
-            id = elem[ expando ] = ++uuid;
-
-         // Only generate the data cache if we're
-         // trying to access or manipulate it
-         if ( name && !jQuery.cache[ id ] )
-            jQuery.cache[ id ] = {};
-
-         // Prevent overriding the named cache with undefined values
-         if ( data !== undefined )
-            jQuery.cache[ id ][ name ] = data;
-
-         // Return the named cache data, or the ID for the element
-         return name ?
-            jQuery.cache[ id ][ name ] :
-            id;
-      },
-
-      removeData: function( elem, name ) {
-         elem = elem == window ?
-            windowData :
-            elem;
-
-         var id = elem[ expando ];
-
-         // If we want to remove a specific section of the element's data
-         if ( name ) {
-            if ( jQuery.cache[ id ] ) {
-               // Remove the section of cache data
-               delete jQuery.cache[ id ][ name ];
-
-               // If we've removed all the data, remove the element's cache
-               name = "";
-
-               for ( name in jQuery.cache[ id ] )
-                  break;
-
-               if ( !name )
-                  jQuery.removeData( elem );
-            }
-
-         // Otherwise, we want to remove all of the element's data
-         } else {
-            // Clean up the element expando
-            try {
-               delete elem[ expando ];
-            } catch(e){
-               // IE has trouble directly removing the expando
-               // but it's ok with using removeAttribute
-               if ( elem.removeAttribute )
-                  elem.removeAttribute( expando );
-            }
-
-            // Completely remove the data cache
-            delete jQuery.cache[ id ];
-         }
-      },
       queue: function( elem, type, data ) {
          if ( elem ){
 
@@ -676,3 +607,4 @@
    });
 
 })(jQuery);
+
