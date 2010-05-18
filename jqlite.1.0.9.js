@@ -146,7 +146,7 @@
    };
 
    var hasClasses = function(node, cArr) {
-      if (node.className.length = 0) {
+      if (node.className.length == 0) {
          return false;
       }
       var cn = node.className.split(" ");
