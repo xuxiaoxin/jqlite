@@ -1869,7 +1869,7 @@
 
    // Allow extending jQL or jQLp
    jQuery.extend = jQuery.fn.extend = function() {
-      Profiler.enter(".extend");
+      Profiler.enter("jQL.extend");
       try {
          // copy reference to target object
          var target = arguments[0] || {}, i = 1, length = arguments.length, deep = false, options, name, src, copy;
