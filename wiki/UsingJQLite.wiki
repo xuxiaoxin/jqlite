@@ -45,12 +45,12 @@ Supported object methods:
 || `jQuery.isFunction(obj)`:boolean || Determine if the input is a Function ||
 || `jQuery.isArray(obj)`:boolean || Determine if the input is an Array ||
 || `jQuery.isPlainObject(obj)`:boolean || Determine if the input is a plain Javascript Object ||
-|| `jQuery.merge(obj1, obj2)`:obj || Merges two objects into one. Works on Arrays an Objects ||
-|| `jQuery.param(obj)`:string || Converts a Javascript Object or Array into a query string ||
-|| `jQuery.makeArray(obj[, results])`:array || Converts the object into an Array. If you provide the second argument (an array), the two will be merged into one. ||
+|| `jQuery.merge(obj1, obj2)`:Object || Merges two objects into one. Works on Arrays an Objects ||
+|| `jQuery.param(obj)`:String || Converts a Javascript Object or Array into a query string ||
+|| `jQuery.makeArray(obj[, results])`:Array || Converts the object into an Array. If you provide the second argument (an array), the two will be merged into one. ||
 || `jQuery.trim(str)`:String || Remove leading and trailing whitespace from string ||
 || `jQuery.inArray(value, array)`:Number || Return the index of the value in the array, or -1 if not found ||
-|| `jQuery.data(elem, key, data)` || Add arbitrary data to the given DOM element ||
+|| `jQuery.data(elem, key[, data])`:Object || Add arbitrary data to the given DOM element, or query for the data associated with the key ||
 || `jQuery.removeData(elem, key)` || Remove arbitrary data from the given DOM element ||
 
 Supported instance methods: _(links to jQuery Docs)_
