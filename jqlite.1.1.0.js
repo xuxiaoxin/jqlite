@@ -152,7 +152,7 @@
       var cn = node.className.split(" ");
       var cC = cArr.length;
       for (var c = 0; c < cArr.length; c++) {
-         if (idxOf(cn, cArr[c]) != -1) {
+         if (jQL.inArray(cArr[c], cn) != -1) {
             cC--;
          }
       }
@@ -270,15 +270,15 @@
    //------------------ EVENTS
 
    /**
-    * Associative array of events and their types (Mozilla/Firefox only)
+    * Associative array of events and their types
     * @private
     */
-   var EVENT_TYPES = {onclick:"MouseEvents",ondblclick:"MouseEvents",onmousedown:"MouseEvents",onmouseup:"MouseEvents",
-                  onmouseover:"MouseEvents",onmousemove:"MouseEvents",onmouseout:"MouseEvents",oncontextmenu:"MouseEvents",
-                  onkeypress:"KeyEvents",onkeydown:"KeyEvents",onkeyup:"KeyEvents",onload:"HTMLEvents",onunload:"HTMLEvents",
-                  onabort:"HTMLEvents",onerror:"HTMLEvents",onresize:"HTMLEvents",onscroll:"HTMLEvents",onselect:"HTMLEvents",
-                  onchange:"HTMLEvents",onsubmit:"HTMLEvents",onreset:"HTMLEvents",onfocus:"HTMLEvents",onblur:"HTMLEvents",
-                  ontouchstart:"MouseEvents",ontouchend:"MouseEvents",ontouchmove:"MouseEvents"};
+   var EVENT_TYPES = {click:"MouseEvents",dblclick:"MouseEvents",mousedown:"MouseEvents",mouseup:"MouseEvents",
+                      mouseover:"MouseEvents",mousemove:"MouseEvents",mouseout:"MouseEvents",contextmenu:"MouseEvents",
+                      keypress:"KeyEvents",keydown:"KeyEvents",keyup:"KeyEvents",load:"HTMLEvents",unload:"HTMLEvents",
+                      abort:"HTMLEvents",error:"HTMLEvents",resize:"HTMLEvents",scroll:"HTMLEvents",select:"HTMLEvents",
+                      change:"HTMLEvents",submit:"HTMLEvents",reset:"HTMLEvents",focus:"HTMLEvents",blur:"HTMLEvents",
+                      touchstart:"MouseEvents",touchend:"MouseEvents",touchmove:"MouseEvents"};
 
    var createEvent = function(eventType) {
       if (typeof eventType === "string") {
@@ -533,7 +533,7 @@
       if ( elem.nodeName && jQuery.noData[elem.nodeName.toLowerCase()] ) {
          return;
       }
-      
+
       elem = elem == window ?
          windowData :
          elem;
@@ -690,11 +690,6 @@
 
    };
 
-   /**
-    * Convert the results into an array
-    * @param array
-    * @param results
-    */
    jQL.makeArray = function( array, results ) {
       var ret = results || [];
       if ( array != null ) {
@@ -711,8 +706,25 @@
       return ret;
    };
 
+   jQL.inArray = function(e, arr) {
+      for (var a = 0; a < arr.length; a++) {
+         if (arr[a] === e) {
+            return a;
+         }
+      }
+      return -1;
+   };
+
+   jQL.trim = function(str) {
+      if (str != null) {
+         return str.toString().replace(/^\s*|\s*$/g,"");
+      } else {
+         return "";
+      }
+   };
+
    /**
-    * jQLite object
+    * jQLite instance object
     * @private
     */
    var jQLp = function() {};
@@ -840,7 +852,7 @@
          return this.each(function() {
             if (this.className.length != 0) {
                var cn = this.className.split(" ");
-               if (idxOf(cn, cName) == -1) {
+               if (jQL.inArray(cName, cn) == -1) {
                   cn.push(cName);
                   this.className = cn.join(" ");
                }
@@ -854,7 +866,7 @@
          return this.each(function() {
             if (this.className.length != 0) {
                var cn = this.className.split(" ");
-               var i = idxOf(cn, cName);
+               var i = jQL.inArray(cName, cn);
                if (i != -1) {
                   cn.splice(i, 1);
                   this.className = cn.join(" ");
@@ -867,8 +879,7 @@
          if (this[0].className.length == 0) {
             return false;
          }
-         var cn = this[0].className.split(" ");
-         return idxOf(cn, cName) != -1;
+         return jQL.inArray(cName, this[0].className.split(" ")) != -1;
       },
 
       isElementName: function(eName) {
@@ -881,7 +892,7 @@
                this.className = cName;
             } else {
                var cn = this.className.split(" ");
-               var i = idxOf(cn, cName);
+               var i = jQL.inArray(cName, cn);
                if (i != -1) {
                   cn.splice(i, 1);
                } else {
@@ -917,22 +928,16 @@
          if (typeof sel === "string" && val == null) {
             return this[0].style[fixStyleProp(sel)];
          } else {
+            sel = typeof sel === "string" ? makeObj(sel,val) : sel;
             return this.each(function() {
-               if (typeof sel === "string") {
-                  var o = {};
-                  o[sel] = val;
-                  sel = o;
-               }
-
-               for (var s in sel) {
-                  var v = sel[s];
-                  v = (typeof v === "number" ? v + "px" : v);
-                  var sn = fixStyleProp(s);
+               jQL.each(sel, function(key,value) {
+                  value = (typeof value === "number" ? value + "px" : value);
+                  var sn = fixStyleProp(key);
                   if (!this.style[sn]) {
-                     sn = s;
+                     sn = key;
                   }
-                  this.style[sn] = v;
-               }
+                  this.style[sn] = value;
+               });
             });
          }
       },
@@ -986,12 +991,7 @@
             }
          } else {
             return this.each(function() {
-               if (typeof name === "string") {
-                  var o = {};
-                  o[name] = value;
-                  name = o;
-               }
-
+               name = typeof name === "string" ? makeObj(name,value) : name;
                for (var i in name) {
                   var v = name[i];
                   this.setAttribute(i,v);
@@ -1004,6 +1004,16 @@
          var elms = this.toArray();
          var elm = index < 0 ? elms[elms.length + index] : elms[index];
          this.context = this[0] = elm;
+         this.length = 1;
+      },
+
+      first: function() {
+         this.length = 1;
+      },
+
+      last: function() {
+         var elms = this.toArray();
+         this.context = this[0] = elms[elms.length - 1];
          this.length = 1;
       },
 
@@ -1251,86 +1261,6 @@
          });
       },
 
-      click: function(fn) {
-         return this.each(function() {
-            if (jQL.isFunction(fn)) {
-               setHandler(this, "onclick", fn);
-            } else {
-               return fireEvent(this, "onclick");
-            }
-         });
-      },
-
-      mouseover: function(fn) {
-         return this.each(function() {
-            if (jQL.isFunction(fn)) {
-               setHandler(this, "onmouseover", fn);
-            } else {
-               return fireEvent(this, "onmouseover");
-            }
-         });
-      },
-
-      mouseout: function(fn) {
-         return this.each(function() {
-            if (jQL.isFunction(fn)) {
-               setHandler(this, "onmouseout", fn);
-            } else {
-               return fireEvent(this, "onmouseout");
-            }
-         });
-      },
-
-      mousedown: function(fn) {
-         return this.each(function() {
-            if (jQL.isFunction(fn)) {
-               setHandler(this, "onmousedown", fn);
-            } else {
-               return fireEvent(this, "onmousedown");
-            }
-         });
-      },
-
-      mouseup: function(fn) {
-         return this.each(function() {
-            if (jQL.isFunction(fn)) {
-               setHandler(this, "onmouseup", fn);
-            } else {
-               return fireEvent(this, "onmouseup");
-            }
-         });
-      },
-
-      focus: function(fn) {
-         return this.each(function() {
-            if (jQL.isFunction(fn)) {
-               setHandler(this, "onfocus", fn);
-            } else {
-               return fireEvent(this, "onfocus");
-            }
-         });
-      },
-
-      blur: function(fn) {
-         return this.each(function() {
-            if (jQL.isFunction(fn)) {
-               setHandler(this, "onblur", fn);
-            } else {
-               return fireEvent(this, "onblur");
-            }
-         });
-      },
-
-      change: function(fn) {
-         return this.each(function() {
-            if (jQL.isFunction(fn)) {
-               setHandler(this, "onchange", fn);
-            } else {
-               return fireEvent(this, "onchange");
-            }
-         });
-      },
-
       submit: function(fn) {
          return this.each(function() {
             if (jQL.isFunction(fn)) {
@@ -1341,40 +1271,10 @@
                }
             }
          });
-      },
-
-      // TOUCH EVENTS
-      touchstart: function(fn) {
-         return this.each(function() {
-            if (jQL.isFunction(fn)) {
-               setHandler(this, "ontouchstart", fn);
-            } else {
-               return fireEvent(this, "ontouchstart");
-            }
-         });
-      },
-
-      touchend: function(fn) {
-         return this.each(function() {
-            if (jQL.isFunction(fn)) {
-               setHandler(this, "ontouchend", fn);
-            } else {
-               return fireEvent(this, "ontouchend");
-            }
-         });
-      },
-
-      touchmove: function(fn) {
-         return this.each(function() {
-            if (jQL.isFunction(fn)) {
-               setHandler(this, "ontouchmove", fn);
-            } else {
-               return fireEvent(this, "ontouchmove");
-            }
-         });
       }
 
    };
+
 
    // Cleanup functions for the document ready method
    if ( document.addEventListener ) {
@@ -1421,21 +1321,10 @@
       }
    }
 
-   var idxOf = function(arr, e) {
-      for (var a = 0; a < arr.length; a++) {
-         if (arr[a] === e) {
-            return a;
-         }
-      }
-      return -1;
-   };
-
-   jQL.trim = function(str) {
-      if (str != null) {
-         return str.toString().replace(/^\s*|\s*$/g,"");
-      } else {
-         return "";
-      }
+   var makeObj = function(sel, val) {
+      var o = {};
+      o[sel] = val;
+      return o;
    };
 
    var cleanUp = function(els) {
@@ -1515,4 +1404,18 @@
       // Return the modified object
       return target;
    };
+
+   // Wire up events
+   jQuery.each("click,dblclick,mouseover,mouseout,mousedown,mouseup,keydown,keypress,keyup,focus,blur,change,select,error,load,unload,scroll,resize,touchstart,touchend,touchmove".split(","),
+         function(i, name) {
+            jQuery.fn[name] = function(fn) {
+               Profiler.enter("jQLp." + name);
+               try {
+                  return (fn ? this.bind(name, fn) : this.trigger(name));
+               } finally {
+                  Profiler.exit();
+               }
+            };
+         });
+
 })();
