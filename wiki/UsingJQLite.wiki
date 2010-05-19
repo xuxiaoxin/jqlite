@@ -41,7 +41,7 @@ Attribute selectors use regular expressions, so may exhibit inconsistencies acro
 
 Supported object methods:
 
-|| `jQuery.noop()`:boolean || A no-op function (no action) || 
+|| `jQuery.noop()`|| A no-op function (no action) || 
 || `jQuery.isFunction(obj)`:boolean || Determine if the input is a Function ||
 || `jQuery.isArray(obj)`:boolean || Determine if the input is an Array ||
 || `jQuery.isPlainObject(obj)`:boolean || Determine if the input is a plain Javascript Object ||
