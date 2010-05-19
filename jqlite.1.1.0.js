@@ -1409,12 +1409,7 @@
    jQuery.each("click,dblclick,mouseover,mouseout,mousedown,mouseup,keydown,keypress,keyup,focus,blur,change,select,error,load,unload,scroll,resize,touchstart,touchend,touchmove".split(","),
          function(i, name) {
             jQuery.fn[name] = function(fn) {
-               Profiler.enter("jQLp." + name);
-               try {
-                  return (fn ? this.bind(name, fn) : this.trigger(name));
-               } finally {
-                  Profiler.exit();
-               }
+               return (fn ? this.bind(name, fn) : this.trigger(name));
             };
          });
 
