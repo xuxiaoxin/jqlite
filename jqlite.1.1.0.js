@@ -930,13 +930,14 @@
          } else {
             sel = typeof sel === "string" ? makeObj(sel,val) : sel;
             return this.each(function() {
+               var self = this;
                jQL.each(sel, function(key,value) {
                   value = (typeof value === "number" ? value + "px" : value);
                   var sn = fixStyleProp(key);
-                  if (!this.style[sn]) {
+                  if (!self.style[sn]) {
                      sn = key;
                   }
-                  this.style[sn] = value;
+                  self.style[sn] = value;
                });
             });
          }
