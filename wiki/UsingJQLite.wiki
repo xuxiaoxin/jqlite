@@ -49,6 +49,7 @@ Supported object methods:
 || `jQuery.param(obj)`:string || Converts a Javascript Object or Array into a query string ||
 || `jQuery.makeArray(obj[, results])`:array || Converts the object into an Array. If you provide the second argument (an array), the two will be merged into one. ||
 || `jQuery.trim(str)`:String || Remove leading and trailing whitespace from string ||
+|| `jQuery.inArray(value, array)`:Number || Return the index of the value in the array, or -1 if not found ||
 || `jQuery.data(elem, key, data)` || Add arbitrary data to the given DOM element ||
 || `jQuery.removeData(elem, key)` || Remove arbitrary data from the given DOM element ||
 
@@ -78,6 +79,8 @@ A subset of the operations which jQuery supports are currently implemented.  All
   * [http://api.jquery.com/next/ .next([selector])]
   * [http://api.jquery.com/children/ .children([selector])]
   * [http://api.jquery.com/eq/ .eq(index)]
+  * [http://api.jquery.com/first/ .first()]
+  * [http://api.jquery.com/last/ .last()]
   * [http://api.jquery.com/index/ .index([selector])]
   * [http://api.jquery.com/append/ .append(obj)]
   * [http://api.jquery.com/remove/ .remove([filter])]
@@ -87,7 +90,7 @@ A subset of the operations which jQuery supports are currently implemented.  All
   * [http://api.jquery.com/bind/ .bind(eventName, function...)]
   * [http://api.jquery.com/trigger/ .trigger(eventName[, array]))]
   * [http://api.jquery.com/data/ .data(key [, value]))]
-  * [http://api.jquery.com/data/ .removeData(key)]
+  * [http://api.jquery.com/removeData/ .removeData(key)]
 
 Event Handlers: _(links to jQuery Docs)_
 
