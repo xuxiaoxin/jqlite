@@ -5,11 +5,11 @@
 		  the user to scale the viewport. -->
 	<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 
-	<!-- jQuery lite (JQLite) -->
-	<!-- <script src="jqlite.1.1.0.js" type="text/javascript"></script> -->
+	<!-- jQLite -->
+	<script src="jqlite.1.1.0.js" type="text/javascript"></script>
 
-	<!-- jQuery -->
-	<script src="jquery.js" type="text/javascript"></script>
+	<!-- jQuery
+	<script src="jquery.js" type="text/javascript"></script>-->
 
 
 	<style type="text/css">
@@ -137,18 +137,18 @@
 		});
 	</script>
 
-	<p class="second">
+	<div class="second">
 		Another paragraph with a list inside of it:
 		<ul>
 			<li class="one">One</li>
 			<li class="two">Two</li>
 			<li class="three">Three</li>
 		</ul>
-	</p>
+	</div>
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$("p.second ul li").last().css({ backgroundColor: "yellow" });
+			$("div.second ul li").last().css({ backgroundColor: "yellow" });
 		});
 	</script>
 
@@ -159,7 +159,7 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("p.third div").append($("<span>World</span>"));
-			$("p.second ul li").first().css({ backgroundColor: "red", color: "white" });
+			$("div.second ul li").first().css({ backgroundColor: "red", color: "white" });
 		});
 	</script>
 
