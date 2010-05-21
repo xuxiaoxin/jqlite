@@ -1006,16 +1006,19 @@
          var elm = index < 0 ? elms[elms.length + index] : elms[index];
          this.context = this[0] = elm;
          this.length = 1;
+         return this;
       },
 
       first: function() {
          this.length = 1;
+         return this;
       },
 
       last: function() {
          var elms = this.toArray();
          this.context = this[0] = elms[elms.length - 1];
          this.length = 1;
+         return this;
       },
 
       index: function(selector) {
