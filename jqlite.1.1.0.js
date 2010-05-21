@@ -749,7 +749,7 @@
             // Short-form document.ready()
             this.ready(s);
          } else {
-            var els;
+            var els = [];
             if (s.jquery && typeof s.jquery === "string") {
                // Already jQLite, just grab its elements
                els = s.toArray();
