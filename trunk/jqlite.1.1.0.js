@@ -1010,6 +1010,8 @@
       },
 
       first: function() {
+         var elms = this.toArray();
+         this.context = this[0] = elms[0];
          this.length = 1;
          return this;
       },
