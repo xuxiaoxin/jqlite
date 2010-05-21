@@ -152,13 +152,13 @@
 		});
 	</script>
 
-	<p class="third">
-		<div>Hello</div>
-	</p>
+	<div class="third">
+		<span>Hello</span>
+	</div>
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$("p.third div").append($("<span>World</span>"));
+			$("div.third span").append($("<span> World</span>"));
 			$("div.second ul li").first().css({ backgroundColor: "red", color: "white" });
 		});
 	</script>
