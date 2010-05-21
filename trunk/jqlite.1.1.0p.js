@@ -717,7 +717,7 @@
       Profiler.enter("jQL.ready");
       try {
          isReady = true;
-         for (var r = 0; r < readyStack.length; r++) {
+         while(readyStack.length > 0) {
             var fn = readyStack.shift();
             fn();
          }
@@ -999,7 +999,7 @@
                // Short-form document.ready()
                this.ready(s);
             } else {
-               var els;
+               var els = [];
                if (s.jquery && typeof s.jquery === "string") {
                   // Already jQLite, just grab its elements
                   els = s.toArray();
@@ -1241,14 +1241,16 @@
                sel = typeof sel === "string" ? makeObj(sel,val) : sel;
                return this.each(function() {
                   var self = this;
-                  jQL.each(sel, function(key,value) {
-                     value = (typeof value === "number" ? value + "px" : value);
-                     var sn = fixStyleProp(key);
-                     if (!self.style[sn]) {
-                        sn = key;
-                     }
-                     self.style[sn] = value;
-                  });
+                  if (typeof self.style != "undefined") {
+                     jQL.each(sel, function(key,value) {
+                        value = (typeof value === "number" ? value + "px" : value);
+                        var sn = fixStyleProp(key);
+                        if (!self.style[sn]) {
+                           sn = key;
+                        }
+                        self.style[sn] = value;
+                     });
+                  }
                });
             }
          } finally {
@@ -1336,6 +1338,7 @@
             var elm = index < 0 ? elms[elms.length + index] : elms[index];
             this.context = this[0] = elm;
             this.length = 1;
+            return this;
          } finally {
             Profiler.exit();
          }
@@ -1344,7 +1347,10 @@
       first: function() {
          Profiler.enter("jQLp.first");
          try {
+            var elms = this.toArray();
+            this.context = this[0] = elms[0];
             this.length = 1;
+            return this;
          } finally {
             Profiler.exit();
          }
@@ -1356,6 +1362,7 @@
             var elms = this.toArray();
             this.context = this[0] = elms[elms.length - 1];
             this.length = 1;
+            return this;
          } finally {
             Profiler.exit();
          }
