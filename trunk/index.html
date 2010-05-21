@@ -137,18 +137,18 @@
 		});
 	</script>
 
-	<div class="second">
+	<p class="second">
 		Another paragraph with a list inside of it:
 		<ul>
 			<li class="one">One</li>
 			<li class="two">Two</li>
 			<li class="three">Three</li>
 		</ul>
-	</div>
+	</p>
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$("div.second ul li").last().css({ backgroundColor: "yellow" });
+			$("p.second ul li").last().css({ backgroundColor: "yellow" });
 		});
 	</script>
 
@@ -159,7 +159,7 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("p.third div").append($("<span>World</span>"));
-			$("div.second ul li").first().css({ backgroundColor: "red", color: "white" });
+			$("p.second ul li").first().css({ backgroundColor: "red", color: "white" });
 		});
 	</script>
 
