@@ -511,7 +511,7 @@
 
    jQL.ready = function() {
       isReady = true;
-      for (var r = 0; r < readyStack.length; r++) {
+      while(readyStack.length > 0) {
          var fn = readyStack.shift();
          fn();
       }
@@ -931,14 +931,16 @@
             sel = typeof sel === "string" ? makeObj(sel,val) : sel;
             return this.each(function() {
                var self = this;
-               jQL.each(sel, function(key,value) {
-                  value = (typeof value === "number" ? value + "px" : value);
-                  var sn = fixStyleProp(key);
-                  if (!self.style[sn]) {
-                     sn = key;
-                  }
-                  self.style[sn] = value;
-               });
+               if (typeof self.style != "undefined") {
+                  jQL.each(sel, function(key,value) {
+                     value = (typeof value === "number" ? value + "px" : value);
+                     var sn = fixStyleProp(key);
+                     if (!self.style[sn]) {
+                        sn = key;
+                     }
+                     self.style[sn] = value;
+                  });
+               }
             });
          }
       },
