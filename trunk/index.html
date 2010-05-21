@@ -158,11 +158,23 @@
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-			alert("foo");
 			$("div.third span").append($("<span> World</span>"));
 			$("div.second ul li").first().css({ backgroundColor: "red", color: "white" });
 		});
 	</script>
+
+	<div class="fourth">
+		<div class="not-found">
+			This won't be found, but shouldn't throw an error!
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("div.fourth div.found").css("border", "1px solid blue").last().css("background", "pink");
+		});
+	</script>
+
 
 </body>
 </html>
