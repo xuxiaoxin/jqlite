@@ -1,5 +1,5 @@
 /*!
- * jQLite JavaScript Library v1.1.0 (http://code.google.com/p/jqlite/)
+ * jQLite JavaScript Library v1.1.1 (http://code.google.com/p/jqlite/)
  *
  * Copyright (c) 2010 Brett Fattori (bfattori@gmail.com)
  * Licensed under the MIT license
@@ -347,14 +347,16 @@
             var aC = arguments.callee;
             var args = evt.data || [];
             args.unshift(evt);
-            var op = aC.fn.apply(node, args);
-            if (typeof op != "undefined" && !op) {
+            var op = aC.fn.apply(aC.node, args);
+            if (typeof op != "undefined" && op === false) {
                evt.preventDefault();
+               evt.stopPropagation();
                return false;
             }
             return true;
          };
          handler.fn = fn;
+         handler.node = node;
          node.addEventListener(eventType, handler, false);
       } else {
          if (!node._handlers) {
@@ -733,7 +735,7 @@
       selector: "",
       context: null,
       length: 0,
-      jquery: "jqlite-1.1.0",
+      jquery: "jqlite-1.1.1",
 
       init: function(s, e) {
 
