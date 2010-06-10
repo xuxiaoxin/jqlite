@@ -347,7 +347,7 @@
             var aC = arguments.callee;
             var args = evt.data || [];
             args.unshift(evt);
-            var op = aC.fn.apply(aC.node, args);
+            var op = aC.fn.apply(node, args);
             if (typeof op != "undefined" && op === false) {
                evt.preventDefault();
                evt.stopPropagation();
@@ -356,7 +356,6 @@
             return true;
          };
          handler.fn = fn;
-         handler.node = node;
          node.addEventListener(eventType, handler, false);
       } else {
          if (!node._handlers) {
@@ -760,11 +759,11 @@
                els = s;
             } else if (typeof s === "string" && jQL.trim(s).indexOf("<") == 0 && jQL.trim(s).indexOf(">") != -1) {
                // This is most likely html, so create an element for them
-               var elm = jQL.trim(s).indexOf("<option") == 0 ? "SELECT" : "DIV";
+               var elm = getParentElem(s);
                var h = document.createElement(elm);
                h.innerHTML = s;
                // Extract the element
-               els = [h.firstChild];
+               els = [h.removeChild(h.firstChild)];
                h = null;
             } else {
                var selectors;
@@ -1347,6 +1346,14 @@
          els = els.toArray();
       }
       return els;
+   };
+
+   var getParentElem = function(str) {
+      var s = jQL.trim(str).toLowerCase();
+      return s.indexOf("<option") == 0 ? "SELECT" :
+                s.indexOf("<li") == 0 ? "UL" :
+                s.indexOf("<tr") == 0 ? "TBODY" :
+                s.indexOf("<td") == 0 ? "TR" : "DIV";
    };
 
    // -=- This happens last, as long as jQuery isn't already defined
