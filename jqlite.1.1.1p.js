@@ -1633,7 +1633,7 @@
          try {
             if (value == null) {
                var v = null;
-               if (typeof this[0].value != "undefined") {
+               if (this && this.length != 0 && typeof this[0].value != "undefined") {
                   v = this[0].value;
                }
                return v;
