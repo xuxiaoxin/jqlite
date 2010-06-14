@@ -134,7 +134,14 @@
             // For each context node, look for the
             // specified node within it
             var ctxNode = [context[cN]];
-            nodes = nodes.concat(parseChunks(selector, ctxNode));
+            if (ctxNode[0].querySelectorAll) {
+               var nl = ctxNode[0].querySelectorAll(selector);
+               for (var tni = 0; tni < nl.length; tni++) {
+                  nodes.push(nl.item(tni));
+               }
+            } else {
+               nodes = nodes.concat(parseChunks(selector, ctxNode));
+            }
          }
 
          //alert(selector + " found " + nodes.length + " nodes");
