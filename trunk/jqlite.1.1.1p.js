@@ -274,8 +274,6 @@
                   nodes = nodes.concat(parseChunks(selector, ctxNode));
                }
             }
-
-            //alert(selector + " found " + nodes.length + " nodes");
             return nodes;
          } else {
             // What do you want me to do with this?
@@ -527,14 +525,23 @@
                args.unshift(evt);
                var op = aC.fn.apply(node, args);
                if (typeof op != "undefined" && op === false) {
-                  evt.preventDefault();
-                  evt.stopPropagation();
+                  if (evt.preventDefault && evt.stopPropagation) {
+                     evt.preventDefault();
+                     evt.stopPropagation();
+                  } else {
+                     evt.returnValue = false;
+                     evt.cancelBubble = true;
+                  }
                   return false;
                }
                return true;
             };
             handler.fn = fn;
-            node.addEventListener(eventType, handler, false);
+            if (node.addEventListener) {
+               node.addEventListener(eventType, handler, false);
+            } else {
+               node.attachEvent("on" + eventType, handler);
+            }
          } else {
             if (!node._handlers) {
                node._handlers = {};
