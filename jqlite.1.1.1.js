@@ -920,9 +920,11 @@
 
       hide: function(fn) {
          return this.each(function() {
-            if (this.style["display"].toString() != "none") {
-               this._oldDisplay = this.style["display"].toString() || (this.nodeName != "span" ? "block" : "inline");
-               this.style["display"] = "none";
+            if (this.style && this.style["display"] != null) {
+               if (this.style["display"].toString() != "none") {
+                  this._oldDisplay = this.style["display"].toString() || (this.nodeName != "span" ? "block" : "inline");
+                  this.style["display"] = "none";
+               }
             }
             if (jQL.isFunction(fn)) {
                fn(this);
