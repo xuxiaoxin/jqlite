@@ -5,7 +5,7 @@
 
 = Summary of Supported Features =
 
-jQLite establishes itself as "jQuery" and also exposes the "$" constructor.  You cannot use jQuery and jQLite together on a page.  Since this is intended to be a stand-in for jQuery, it isn't going to support all of the features of jQuery.  This is intended to be a close match to simple functionality needed on a mobile device.  The main focus was element selection, CSS manipulation, AJAX/AHAH, and some event handling.  The jQuery FX animation engine is supported as a plug-in, but isn't recommended for heavy use due to limited mobile processor power.
+jQLite establishes itself as "jQuery" and also exposes the "$" constructor.  You cannot use jQuery and jQLite together on a page.  Since this is intended to be a stand-in for jQuery, it isn't going to support all of the features of jQuery.  This is intended to be a close match to simple functionality needed on a mobile device.  The main focus was element selection, CSS manipulation, AJAX/AHAH, and some event handling.  The [http://code.google.com/p/jqlite/wiki/Extensions jQuery FX animation engine] is supported as a plug-in, but isn't recommended for heavy use due to limited mobile processor power.
 
 If you develop your web app to use jQuery in its most simplest way, you should be able to upgrade to jQuery when mobile devices can handle it fully.  As it stands, the only mobile browser which this was intended for (!BlackBerry) will soon be updated to a !WebKit implementation.
 
