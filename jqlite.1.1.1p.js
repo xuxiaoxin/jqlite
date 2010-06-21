@@ -265,7 +265,7 @@
                // For each context node, look for the
                // specified node within it
                var ctxNode = [context[cN]];
-               if (ctxNode[0].querySelectorAll) {
+               if (!jQL.forceSimpleSelectorEngine && ctxNode[0].querySelectorAll) {
                   var nl = ctxNode[0].querySelectorAll(selector);
                   for (var tni = 0; tni < nl.length; tni++) {
                      nodes.push(nl.item(tni));
@@ -582,6 +582,16 @@
    isReady = false,
    setReady = false,
    DOMContentLoaded;
+
+   /** 
+    * Force the usage of the simplified selector engine. Setting this to true will
+    * cause the simplified selector engine to be used, limiting the number of available
+    * selectors based on the original (jQLite v1.0.0 - v1.1.0) selector engine.  Keeping
+    * the value at "false" will allow jQLite to switch to using [element].querySelectorAll()
+    * if it is available.  This provides a speed increase, but it may function differently
+    * based on each platform.
+    */
+   jQL.forceSimpleSelectorEngine = false;
 
    /**
     * Loop over each object, performing the function for each one
