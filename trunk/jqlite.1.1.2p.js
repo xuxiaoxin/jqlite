@@ -1,5 +1,5 @@
 /*!
- * jQLite JavaScript Library v1.1.1p (http://code.google.com/p/jqlite/)
+ * jQLite JavaScript Library v1.1.2p (http://code.google.com/p/jqlite/)
  * This includes a profiler for the selector engine
  *
  * Copyright (c) 2010 Brett Fattori (bfattori@gmail.com)
@@ -1007,7 +1007,7 @@
       selector: "",
       context: null,
       length: 0,
-      jquery: "jqlite-1.1.1p",
+      jquery: "jqlite-1.1.2p",
 
       init: function(s, e) {
          Profiler.enter("jQLp.init");
