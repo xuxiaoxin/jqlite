@@ -404,7 +404,7 @@
    setReady = false,
    DOMContentLoaded;
 
-   /** 
+   /**
     * Force the usage of the simplified selector engine. Setting this to true will
     * cause the simplified selector engine to be used, limiting the number of available
     * selectors based on the original (jQLite v1.0.0 - v1.1.0) selector engine.  Keeping
@@ -1275,8 +1275,12 @@
             return v;
          } else {
             return this.each(function() {
-               if (typeof this.value != "undefined") {
-                  this.value = value;
+               if (typeof this.type != "undefined") {
+                  if (this.type == "checkbox" || this.type == "radio") {
+                     this.checked = (value == "on" || value == 1 || value === true);
+                  } else if (typeof this.value != "undefined") {
+                        this.value = value;
+                  }
                }
             });
          }
