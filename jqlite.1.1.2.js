@@ -1,5 +1,5 @@
 /*!
- * jQLite JavaScript Library v1.1.1 (http://code.google.com/p/jqlite/)
+ * jQLite JavaScript Library v1.1.2 (http://code.google.com/p/jqlite/)
  *
  * Copyright (c) 2010 Brett Fattori (bfattori@gmail.com)
  * Licensed under the MIT license
@@ -758,7 +758,7 @@
       selector: "",
       context: null,
       length: 0,
-      jquery: "jqlite-1.1.1",
+      jquery: "jqlite-1.1.2",
 
       init: function(s, e) {
 
