@@ -972,32 +972,6 @@
          }
       },
 
-      // AJAX
-
-      load: function(url, params, fn) {
-         if (jQL.isFunction(params)) {
-            fn = params;
-            params = {};
-         }
-         return this.each(function() {
-            var wrapFn = function(data, status) {
-               var aC = arguments.callee;
-               if (data) {
-                  // Strip out any scripts first
-                  var o = stripScripts(data);
-                  aC.elem.innerHTML = o.data;
-                  jQL.evalScripts(o.scripts);
-               }
-               if (jQL.isFunction(aC.cback)) {
-                  aC.cback(data, status);
-               }
-            };
-            wrapFn.cback = fn;
-            wrapFn.elem = this;
-            jQL.ajax.send(url, params, wrapFn);
-         });
-      },
-
       // HTML
 
       html: function(h) {
@@ -1460,4 +1434,35 @@
             };
          });
 
+   // AHAH
+   jQuery.fn.extend({
+      _load: jQuery.fn.load,
+      load: function(url, params, fn) {
+         if ( typeof url != 'string' ) {
+            return this._load( url );
+         }
+
+         if (jQL.isFunction(params)) {
+            fn = params;
+            params = {};
+         }
+         return this.each(function() {
+            var wrapFn = function(data, status) {
+               var aC = arguments.callee;
+               if (data) {
+                  // Strip out any scripts first
+                  var o = stripScripts(data);
+                  aC.elem.innerHTML = o.data;
+                  jQL.evalScripts(o.scripts);
+               }
+               if (jQL.isFunction(aC.cback)) {
+                  aC.cback(data, status);
+               }
+            };
+            wrapFn.cback = fn;
+            wrapFn.elem = this;
+            jQL.ajax.send(url, params, wrapFn);
+         });
+      }
+   });
 })();

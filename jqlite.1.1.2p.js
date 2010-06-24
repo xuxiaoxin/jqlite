@@ -865,19 +865,21 @@
             }
 
             var async = true, uName = null, pWord = null;
-            if (typeof params.async !== "undefined") {
-               async = params.async;
-               delete params.async;
-            }
+            if (typeof params !== "undefined") {
+               if (typeof params.async !== "undefined") {
+                  async = params.async;
+                  delete params.async;
+               }
 
-            if (typeof params.username !== "undefined") {
-               uName = params.username;
-               delete params.username;
-            }
+               if (typeof params.username !== "undefined") {
+                  uName = params.username;
+                  delete params.username;
+               }
 
-            if (typeof params.password !== "undefined") {
-               pWord = params.password;
-               delete params.password;
+               if (typeof params.password !== "undefined") {
+                  pWord = params.password;
+                  delete params.password;
+               }
             }
 
             // Poll for readyState == 4
@@ -1280,37 +1282,6 @@
                   }
                });
             }
-         } finally {
-            Profiler.exit();
-         }
-      },
-
-      // AJAX
-
-      load: function(url, params, fn) {
-         Profiler.enter("jQLp.load");
-         try {
-            if (jQL.isFunction(params)) {
-               fn = params;
-               params = {};
-            }
-            return this.each(function() {
-               var wrapFn = function(data, status) {
-                  var aC = arguments.callee;
-                  if (data) {
-                     // Strip out any scripts first
-                     var o = stripScripts(data);
-                     aC.elem.innerHTML = o.data;
-                     jQL.evalScripts(o.scripts);
-                  }
-                  if (jQL.isFunction(aC.cback)) {
-                     aC.cback(data, status);
-                  }
-               };
-               wrapFn.cback = fn;
-               wrapFn.elem = this;
-               jQL.ajax.send(url, params, wrapFn);
-            });
          } finally {
             Profiler.exit();
          }
@@ -1882,7 +1853,7 @@
    jQuery.each("click,dblclick,mouseover,mouseout,mousedown,mouseup,keydown,keypress,keyup,focus,blur,change,select,error,load,unload,scroll,resize,touchstart,touchend,touchmove".split(","),
          function(i, name) {
             jQuery.fn[name] = function(fn) {
-               Profiler.enter("jQLp." + name);
+               Profiler.enter("[EVENT] jQLp." + name);
                try {
                   return (fn ? this.bind(name, fn) : this.trigger(name));
                } finally {
@@ -1890,4 +1861,41 @@
                }
             };
          });
+
+   // AHAH
+   jQuery.fn.extend({
+      _load: jQuery.fn.load,
+      load: function(url, params, fn) {
+         Profiler.enter("jQLp.load");
+         if ( typeof url != 'string' ) {
+            return this._load( url );
+         }
+
+         try {
+            if (jQL.isFunction(params)) {
+               fn = params;
+               params = {};
+            }
+            return this.each(function() {
+               var wrapFn = function(data, status) {
+                  var aC = arguments.callee;
+                  if (data) {
+                     // Strip out any scripts first
+                     var o = stripScripts(data);
+                     aC.elem.innerHTML = o.data;
+                     jQL.evalScripts(o.scripts);
+                  }
+                  if (jQL.isFunction(aC.cback)) {
+                     aC.cback(data, status);
+                  }
+               };
+               wrapFn.cback = fn;
+               wrapFn.elem = this;
+               jQL.ajax.send(url, params, wrapFn);
+            });
+         } finally {
+            Profiler.exit();
+         }
+      }
+   });
 })();
