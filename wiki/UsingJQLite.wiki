@@ -91,6 +91,9 @@ A subset of the operations which jQuery supports are currently implemented.  All
   * [http://api.jquery.com/trigger/ .trigger(eventName[, array]))]
   * [http://api.jquery.com/data/ .data(key [, value]))]
   * [http://api.jquery.com/removeData/ .removeData(key)]
+  * [http://api.jquery.com/find/ .find(selector)]
+  * [http://api.jquery.com/end/ .end()]
+
 
 Event Handlers: _(links to jQuery Docs)_
 
