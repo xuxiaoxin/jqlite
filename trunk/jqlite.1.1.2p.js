@@ -1070,6 +1070,17 @@
       },
 
       // CORE
+      pushStack: function(elms) {
+         Profiler.enter("jQLp.pushStack");
+         try {
+            var ret = jQL(elms);
+            ret.prevObj = this;
+            ret.context = this.context;
+            return ret;
+         } finally {
+            Profiler.exit();
+         }
+      },
 
       each: function(fn) {
          Profiler.enter("jQLp.each");
@@ -1334,9 +1345,10 @@
          try {
             var elms = this.toArray();
             var elm = index < 0 ? elms[elms.length + index] : elms[index];
-            this.context = this[0] = elm;
-            this.length = 1;
-            return this;
+            var ret = this.pushStack(elms);
+            ret.context = ret[0] = elm;
+            ret.length = 1;
+            return ret;
          } finally {
             Profiler.exit();
          }
@@ -1345,10 +1357,7 @@
       first: function() {
          Profiler.enter("jQLp.first");
          try {
-            var elms = this.toArray();
-            this.context = this[0] = elms[0];
-            this.length = 1;
-            return this;
+            return this.eq(0);
          } finally {
             Profiler.exit();
          }
@@ -1357,10 +1366,7 @@
       last: function() {
          Profiler.enter("jQLp.last");
          try {
-            var elms = this.toArray();
-            this.context = this[0] = elms[elms.length - 1];
-            this.length = 1;
-            return this;
+            return this.eq(-1);
          } finally {
             Profiler.exit();
          }
@@ -1439,7 +1445,7 @@
                   }
                });
             }
-            return jQL(arr);
+            return this.pushStack(arr);
          } finally {
             Profiler.exit();
          }
@@ -1480,7 +1486,7 @@
                   }
                });
             }
-            return jQL(arr);
+            return this.pushStack(arr);
          } finally {
             Profiler.exit();
          }
@@ -1510,7 +1516,7 @@
                   }
                });
             }
-            return jQL(arr);
+            return this.pushStack(arr);
          } finally {
             Profiler.exit();
          }
@@ -1542,7 +1548,7 @@
                   }
                });
             }
-            return jQL(arr);
+            return this.pushStack(arr);
          } finally {
             Profiler.exit();
          }
@@ -1578,7 +1584,20 @@
                   }
                });
             }
-            return jQL(arr);
+            return this.pushStack(arr);
+         } finally {
+            Profiler.exit();
+         }
+      },
+
+      find: function(selector) {
+         Profiler.enter("jQLp.find");
+         try {
+            if (selector) {
+               return this.pushStack(jQL(selector, this));
+            } else {
+               return this;
+            }
          } finally {
             Profiler.exit();
          }
@@ -1645,6 +1664,15 @@
                   }
                });
             }
+         } finally {
+            Profiler.exit();
+         }
+      },
+
+      end: function() {
+         Profiler.enter("jQLp.end");
+         try {
+            return this.prevObj || jQL(null);
          } finally {
             Profiler.exit();
          }
