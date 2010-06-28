@@ -816,6 +816,13 @@
 
       // CORE
 
+      pushStack: function(elms) {
+         var ret = jQL(elms);
+         ret.prevObj = this;
+         ret.context = this.context;
+         return ret;
+      },
+
       each: function(fn) {
          return jQL.each(this, fn);
       },
@@ -1006,24 +1013,19 @@
 
       eq: function(index) {
          var elms = this.toArray();
+         var ret = this.pushStack(elms);
          var elm = index < 0 ? elms[elms.length + index] : elms[index];
-         this.context = this[0] = elm;
-         this.length = 1;
-         return this;
+         ret.context = ret[0] = elm;
+         ret.length = 1;
+         return ret;
       },
 
       first: function() {
-         var elms = this.toArray();
-         this.context = this[0] = elms[0];
-         this.length = 1;
-         return this;
+         return this.eq(0);
       },
 
       last: function() {
-         var elms = this.toArray();
-         this.context = this[0] = elms[elms.length - 1];
-         this.length = 1;
-         return this;
+         return this.eq(-1);
       },
 
       index: function(selector) {
@@ -1092,7 +1094,7 @@
                }
             });
          }
-         return jQL(arr);
+         return this.pushStack(arr);
       },
 
       prev: function(selector) {
@@ -1128,7 +1130,7 @@
                }
             });
          }
-         return jQL(arr);
+         return this.pushStack(arr);
       },
 
       parent: function(selector) {
@@ -1153,7 +1155,7 @@
                }
             });
          }
-         return jQL(arr);
+         return this.pushStack(arr);
       },
 
       parents: function(selector) {
@@ -1180,7 +1182,7 @@
                }
             });
          }
-         return jQL(arr);
+         return this.pushStack(arr);
       },
 
       children: function(selector) {
@@ -1211,7 +1213,15 @@
                }
             });
          }
-         return jQL(arr);
+         return this.pushStack(arr);
+      },
+
+      find: function(selector) {
+         if (selector) {
+            return this.pushStack(jQL(selector, this));
+         } else {
+            return this;
+         }
       },
 
       append: function(child) {
@@ -1258,6 +1268,10 @@
                }
             });
          }
+      },
+
+      end: function() {
+         return this.prevObj || jQL(null);
       },
 
       // EVENTS
