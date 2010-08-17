@@ -635,7 +635,8 @@
       username: null,
       password: null,
       sendFn: null,
-      status: null
+      status: null,
+      contentType: "application/x-www-form-urlencoded"
    };
 
    jQL.ajax = {
@@ -646,7 +647,7 @@
 
       send: function(opts, sendFn) {
          
-         var s = jQL.extend(opts, jQL.ajaxSettings);
+         var s = jQuery.extend(opts, jQL.ajaxSettings);
          
          if (!s.url) {
             return;
@@ -659,6 +660,11 @@
          }
          var req = new XMLHttpRequest();
          req.open(s.type, s.url, s.async, s.username, s.password);
+         
+         if (p.length != 0 || opts && opts.contentType) {
+            xhr.setRequestHeader("Content-Type", s.contentType);
+         }
+         
          req.send((s.type === "POST" || s.type === "PUT") ? p : null);
 
          if (s.async) {
