@@ -627,58 +627,51 @@
       }
    };
 
+   jQL.ajaxSettings = {
+      url: location.href,
+      data: {},
+      type: "GET",
+      async: true,
+      username: null,
+      password: null,
+      sendFn: null,
+      status: null
+   };
+
    jQL.ajax = {
       status: -1,
       statusText: "",
       responseText: null,
       responseXML: null,
-      type: "GET",
 
-      send: function(url, params, sendFn) {
-         if (jQL.isFunction(params)) {
-            sendFn = params;
-            params = {};
-         }
-
-         if (!url) {
+      send: function(opts, sendFn) {
+         
+         var s = jQL.extend(opts, jQL.ajaxSettings);
+         
+         if (!s.url) {
             return;
          }
 
-         var async = true, uName = null, pWord = null;
-         if (typeof params.async !== "undefined") {
-            async = params.async;
-            delete params.async;
-         }
-
-         if (typeof params.username !== "undefined") {
-            uName = params.username;
-            delete params.username;
-         }
-
-         if (typeof params.password !== "undefined") {
-            pWord = params.password;
-            delete params.password;
-         }
-
          // Poll for readyState == 4
-         var p = jQL.param(params);
-         if (p.length != 0 && jQL.ajax.type === "GET") {
+         var p = jQL.param(s.data);
+         if (p.length != 0 && s.type === "GET") {
             url += (url.indexOf("?") == -1 ? "?" : "&") + p;
          }
          var req = new XMLHttpRequest();
-         req.open(jQL.ajax.type, url, async, uName, pWord);
-         req.send((jQL.ajax.type === "POST" || jQL.ajax.type === "PUT") ? p : null);
+         req.open(s.type, s.url, s.async, s.username, s.password);
+         req.send((s.type === "POST" || s.type === "PUT") ? p : null);
 
-         if (async) {
+         if (s.async) {
             var xCB = function(xhr) {
                var aC = arguments.callee;
                if (xhr.status == 200) {
-                  jQL.ajax.complete(xhr, aC.cb);
+                  jQL.ajax.complete(xhr, aC.s, aC.cb);
                } else {
-                  jQL.ajax.error(xhr, aC.cb);
+                  jQL.ajax.error(xhr, aC.s, aC.cb);
                }
             };
             xCB.cb = sendFn;
+            xCB.s = s;
 
             var poll = function() {
                var aC = arguments.callee;
@@ -697,29 +690,43 @@
          }
       },
 
-      complete: function(xhr, callback) {
-         jQL.ajax.status = xhr.status;
+      complete: function(xhr, s, callback) {
+         jQL.ajax.status = s.status = xhr.status;
          var ct = xhr.getResponseHeader("content-type") || "",
             xml = ct.indexOf("xml") >= 0,
             data = xml ? xhr.responseXML : xhr.responseText;
          
          jQL.ajax.responseText = xhr.responseText;
          jQL.ajax.responseXML = xhr.responseXML;
-         jQL("body", document).trigger("ajaxComplete", [xhr, jQL.ajax]);
+         jQL("body", document).trigger("ajaxComplete", [xhr, s]);
          if (jQL.isFunction(callback)) {
             callback(data, xhr.status);
          }
       },
 
-      error: function(xhr, callback) {
-         jQL.ajax.status = xhr.status;
+      error: function(xhr, s, callback) {
+         jQL.ajax.status = s.status = xhr.status;
          jQL.ajax.statusText = xhr.statusText;
-         jQL("body", document).trigger("ajaxError", [xhr, jQL.ajax]);
+         jQL("body", document).trigger("ajaxError", [xhr, s]);
          if (jQL.isFunction(callback)) {
             callback(xhr.status, xhr.statusText);
          }
       }
 
+   };
+   
+   jQL.post = function(url, data, callback, type) {
+      if (jQL.isFunction(data)) {
+         callback = data;
+         data = {};
+      }
+      
+      return jQL.ajax.send({
+         type: "POST",
+         url: url,
+         data: data
+      }, callback);
+      
    };
 
    jQL.makeArray = function( array, results ) {
@@ -1482,7 +1489,13 @@
             };
             wrapFn.cback = fn;
             wrapFn.elem = this;
-            jQL.ajax.send(url, params, wrapFn);
+            
+            var opts = {
+               url: url,
+               data: params
+            };
+            
+            jQL.ajax.send(opts, wrapFn);
          });
       }
    });
