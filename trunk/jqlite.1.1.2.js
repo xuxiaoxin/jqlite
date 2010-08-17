@@ -632,6 +632,7 @@
       statusText: "",
       responseText: null,
       responseXML: null,
+      type: "GET",
 
       send: function(url, params, sendFn) {
          if (jQL.isFunction(params)) {
@@ -661,12 +662,12 @@
 
          // Poll for readyState == 4
          var p = jQL.param(params);
-         if (p.length != 0) {
+         if (p.length != 0 && jQL.ajax.type === "GET") {
             url += (url.indexOf("?") == -1 ? "?" : "&") + p;
          }
          var req = new XMLHttpRequest();
-         req.open("GET", url, async, uName, pWord);
-         req.send();
+         req.open(jQL.ajax.type, url, async, uName, pWord);
+         req.send((jQL.ajax.type === "POST" || jQL.ajax.type === "PUT") ? p : null);
 
          if (async) {
             var xCB = function(xhr) {
@@ -698,16 +699,22 @@
 
       complete: function(xhr, callback) {
          jQL.ajax.status = xhr.status;
+         var ct = xhr.getResponseHeader("content-type") || "",
+            xml = ct.indexOf("xml") >= 0,
+            data = xml ? xhr.responseXML : xhr.responseText;
+         
          jQL.ajax.responseText = xhr.responseText;
          jQL.ajax.responseXML = xhr.responseXML;
+         jQL("body", document).trigger("ajaxComplete", [xhr, jQL.ajax]);
          if (jQL.isFunction(callback)) {
-            callback(xhr.responseText, xhr.status);
+            callback(data, xhr.status);
          }
       },
 
       error: function(xhr, callback) {
          jQL.ajax.status = xhr.status;
          jQL.ajax.statusText = xhr.statusText;
+         jQL("body", document).trigger("ajaxError", [xhr, jQL.ajax]);
          if (jQL.isFunction(callback)) {
             callback(xhr.status, xhr.statusText);
          }
