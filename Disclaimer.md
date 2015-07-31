@@ -1,0 +1,3 @@
+# _Disclaimer_ #
+
+While every precaution is used to maintain compatibility between jQLite and jQuery, some things may be different.  Tests are regularly performed to determine if the expected results are the same as jQuery by swapping the two libraries.  The intent is for the results (the output) to be identical, not the exact structure of the jQLite object.  In summary, tests on each framework should result in the same outcome.
